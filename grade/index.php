@@ -98,6 +98,98 @@
 
         // ako dat povinny parameter select?
 
+
+        		function uploadFile($userfile){
+                
+                    $uploadfile = getcwd()."/". $userfile;
+                    
+                    if (file_exists($uploadfile)){
+                          echo "Súbor s nazvom $uploadfile uz existuje\n";
+                        } 
+                      else{
+                          if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $uploadfile)) {
+                              echo "Súbor bol úspešne pridaný do priečninku Files\n";
+                          } else{
+                              echo "Chyba pri nahrávaní súboru!\n";
+                          }
+                      }
+                    echo "userfile".$uploadfile;
+
+                }
+
+                include "../config.php";
+				
+				$conn = new mysqli($servername, $username, $password, $dbname);
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    } else{
+                        // echo "pripojene k db";
+                    }
+                    mysqli_set_charset($conn,"utf8");  
+					
+                if (isset($_POST['submit'])){
+                       
+            
+                    $year = $_POST['year'];
+                    $subject = $_POST['subject'];
+                    $separator = $_POST['delim'];
+                    $delim = "";
+
+                    if($separator == "coma") $delim = ",";
+                    if($separator == "dotcoma") $delim = ";";
+
+                    //echo "toto je delim ".$delim;
+                    //echo $subject.$year.$separator;
+
+                    // pri kazdom vkladani udajov vymaz tabulku
+                    //mysqli_query($conn,'TRUNCATE TABLE student');
+
+                    $filename = $_FILES['userfile']['name'];
+                    uploadfile($filename);
+                    // cela cesta k suboru
+                    //$path = realpath($filename);
+                    //echo $path;
+
+                    // subor musi byt na servri
+                    // https://stackoverflow.com/questions/2805427/how-to-extract-data-from-csv-file-in-php
+                    // CITANIE S CSV    
+                    if (($handle = fopen($filename, "r")) !== FALSE) {
+						//echo "<br>otvoril subor<br>";
+                        while (($data = fgetcsv($handle, 1000, $delim)) !== FALSE) {
+							
+							//ak neexistuje tím s daným id tak ho vytvor
+							$sqlTim = "select id from team where id=$data[4]"; 
+							$resultTim = mysqli_query($conn, $sqlTim);
+							if (mysqli_num_rows($result2) == 0) {
+								$sqlTim = "INSERT INTO team (id, predmet) VALUES ($data[4], '" . $_POST['subject'] . "')";
+								mysqli_query($conn, $sqlTim);
+							}
+							
+							//vytvor riadok v tabulke student
+							$pom = (int) filter_var($data[0], FILTER_SANITIZE_NUMBER_INT); //toto tu je lebo inak nevedelo pridať prvý záznam z .csv do tabuľky
+							//$sql = "INSERT INTO student (id_student, meno, email, heslo, tim) VALUES ($pom, '".$data[1]."', '".$data[2]."', '".$data[3]."', $data[4])";
+						   $sql = "INSERT INTO student (id_student, tim) VALUES ($pom, $data[4])";
+                           $result = mysqli_query($conn, $sql);
+						   
+						   //vytvor uzivatela
+						   $timestamp = date('Y-m-d H:i:s');
+						   $sqlUzivatel = "";
+						   if($data[3] != "NULL")
+						   {
+							   $hashed_password = password_hash($data[3], PASSWORD_DEFAULT);
+								$sqlUzivatel = "INSERT INTO users (id_ais, login, name, email, password, type, role, created_at) VALUES ($pom, '".$data[2]."', '".$data[1]."', '".$data[2]."', '".$hashed_password."', 'regular', 'student', '$timestamp')";
+						   }
+							else
+								$sqlUzivatel = "INSERT INTO users (id_ais, login, name, email, type, role, created_at) VALUES ($pom, '".$data[2]."', '".$data[1]."', '".$data[2]."', 'ldap', 'student', '$timestamp')";
+							
+						   $result = mysqli_query($conn, $sqlUzivatel);
+						   
+						   
+                        }
+                        fclose($handle);
+                    }
+                unlink(getcwd()."/".$filename);    // odstran subor po precitani
+
         		include "../config.php";
 				
 				$conn = new mysqli($servername, $username, $password, $dbname);
@@ -172,6 +264,7 @@
             
 
 
+
 				}	
 				
 				if(isset($_POST['change'])) //ak boli nastavené body
@@ -198,6 +291,7 @@
                     $result2 = mysqli_query($conn, $sql2);  
                     if (mysqli_num_rows($result2) > 0) {
                         while($row2 = mysqli_fetch_assoc($result2)) {
+
 
 							$sqlBodyTimu = "SELECT body, odsuhlasene from team where id=".$row2['tim'];
 							$nastaveneBody = "false";
@@ -234,6 +328,45 @@
 											  <th>Počet bodov</th>
 											  <th>Súhlas</th>
                                             </tr></thead><tbody>";
+
+
+
+							$sqlBodyTimu = "SELECT body, odsuhlasene from team where id=".$row2['tim'];
+							$nastaveneBody = "false";
+							$rozdeleneBody = "true";
+							$odsuhlaseneBody = "true";
+							$odsuhlaseneBodyAdminom = "false";
+							$body = 0;
+							$resultBody = mysqli_query($conn, $sqlBodyTimu);  
+                            if (mysqli_num_rows($resultBody) > 0) {   								
+                                while($row = mysqli_fetch_assoc($resultBody)) {
+									if(is_numeric($row['body']))
+									{
+										$body = $row['body'];
+										$nastaveneBody = "true";
+									}
+									if($row['odsuhlasene'] == "Áno")
+										$odsuhlaseneBodyAdminom = "true";
+                                 }
+							}
+							
+							if ($nastaveneBody == "true")
+								echo "<h1> Členovia tímu č. ".$row2['tim']." s " . $body . " bodmi</h1>";
+							else
+								echo "<h1> Členovia tímu č. ".$row2['tim']."</h1>";
+							
+                            $sql3 = "select * from student join users on id_student=id_ais WHERE tim=".$row2['tim'];
+                            $result3 = mysqli_query($conn, $sql3);  
+                            if (mysqli_num_rows($result3) > 0) {
+                                echo "<table>
+                                    <thead><tr><th>ID</th>
+                                              <th>Meno</th>
+                                              <th>Email</th>
+                                              <th>Tim</th>
+											  <th>Počet bodov</th>
+											  <th>Súhlas</th>
+                                            </tr></thead><tbody>";
+
 
                                 while($row = mysqli_fetch_assoc($result3)) {
                                      echo "<tr><td>" . $row['id_student']."</td>
@@ -289,6 +422,46 @@
                     } else {
                          echo "you have no records";
                     }
+
+
+                    // -------------------------------------- KU GRAFU S TEAMS -----------------------------------
+                    $pocetTimov = 0; $ano=0; $nie=0; $nevie = 0;
+                    $sql4 = "SELECT COUNT(*) as pocet FROM team";
+                    $result4 = mysqli_query($conn, $sql4);  
+                    if (mysqli_num_rows($result4) > 0) {
+                        $row = mysqli_fetch_assoc($result4);
+                        $pocetTimov = $row['pocet'];
+                    }
+
+                    $sql4 = "SELECT Count(*) as pocet FROM team WHERE odsuhlasene='Nevyjadril'";
+                    $result4 = mysqli_query($conn, $sql4);  
+                    if (mysqli_num_rows($result4) > 0) {
+                        $row = mysqli_fetch_assoc($result4);
+                        $nevie = $row['pocet'];
+                    }
+
+                    $sql4 = "SELECT Count(*) as pocet FROM team WHERE odsuhlasene='Áno'";
+                    $result4 = mysqli_query($conn, $sql4);  
+                    if (mysqli_num_rows($result4) > 0) {
+                        $row = mysqli_fetch_assoc($result4);
+                        $ano = $row['pocet'];
+                    }
+
+                    $sql4 = "SELECT Count(*) as pocet FROM team WHERE odsuhlasene='Nie'";
+                    $result4 = mysqli_query($conn, $sql4);  
+                    if (mysqli_num_rows($result4) > 0) {
+                        $row = mysqli_fetch_assoc($result4);
+                        $nie = $row['pocet'];
+                    }
+
+                    echo "pocet timov".$pocetTimov." ".$ano." ".$nie." ".$nevie;
+
+                    $dataPoints = array( 
+                        array("label"=>"súhlasili", "y"=>($ano/$pocetTimov)),
+                        array("label"=>"nesúhlasili", "y"=>($nie/$pocetTimov)),
+                        array("label"=>"nevyjadrili sa", "y"=>($nevie/$pocetTimov))
+                    );
+
             
 
      ?>
@@ -296,6 +469,10 @@
         </div>
     </main>
     
+
+    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    
+
     <footer class="mt-4 pt-4 border-top">
         <div class="container">
             <div class="row">
@@ -320,6 +497,33 @@
             </div>
         </div>
     </footer>
+
+
+     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+     <script>
+        // https://canvasjs.com/php-charts/pie-chart/
+        window.onload = function() {
+                 
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            title: {
+                text: "Vyjadrenie tímov"
+            },
+            subtitles: [{
+                text: "November 2017"
+            }],
+            data: [{
+                type: "pie",
+                yValueFormatString: "#,##0.00\"%\"",
+                indexLabel: "{label} ({y})",
+                dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+            }]
+        });
+        chart.render();
+         
+        }
+    </script>
+
 </body>
 
 </html>
