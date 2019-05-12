@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hostiteľ: localhost:3306
--- Čas generovania: So 11.Máj 2019, 15:24
+-- Čas generovania: Ne 12.Máj 2019, 09:49
 -- Verzia serveru: 5.7.25-0ubuntu0.18.04.2
 -- Verzia PHP: 7.2.15-0ubuntu0.18.04.1
 
@@ -42,7 +42,10 @@ INSERT INTO `history_login` (`id`, `id_user`, `datetime_login`) VALUES
 (3, 10, '2019-05-10 21:22:54'),
 (4, 10, '2019-05-11 09:59:30'),
 (5, 10, '2019-05-11 11:59:34'),
-(6, 10, '2019-05-11 13:34:50');
+(6, 10, '2019-05-11 13:34:50'),
+(7, 10, '2019-05-12 08:13:39'),
+(8, 10, '2019-05-12 08:46:41'),
+(9, 10, '2019-05-12 08:58:34');
 
 -- --------------------------------------------------------
 
@@ -95,18 +98,12 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`id`, `id_student`, `tim`, `body`, `odsuhlasenie`) VALUES
-(107, 12345, 10, NULL, 'Nevyjadril'),
-(108, 24598, 11, NULL, 'Nevyjadril'),
-(109, 54187, 11, NULL, 'Nevyjadril'),
-(110, 23581, 11, NULL, 'Nevyjadril'),
-(111, 86145, 12, NULL, 'Nevyjadril'),
-(112, 86151, 12, NULL, 'Nevyjadril'),
-(113, 12345, 13, NULL, 'Nevyjadril'),
-(114, 24598, 14, NULL, 'Nevyjadril'),
-(115, 54187, 14, NULL, 'Nevyjadril'),
-(116, 23581, 14, NULL, 'Nevyjadril'),
-(117, 86145, 15, NULL, 'Nevyjadril'),
-(118, 86151, 15, NULL, 'Nevyjadril');
+(131, 12345, 22, NULL, 'Nevyjadril'),
+(132, 24598, 23, 49, 'Áno'),
+(133, 54187, 23, 45, 'Áno'),
+(134, 23581, 23, 56, 'Áno'),
+(135, 86145, 24, 1, 'Áno'),
+(136, 86151, 24, 199, 'Áno');
 
 -- --------------------------------------------------------
 
@@ -127,12 +124,9 @@ CREATE TABLE `team` (
 --
 
 INSERT INTO `team` (`id_timu`, `cislo_timu`, `body`, `predmet`, `odsuhlasene`) VALUES
-(10, 1, NULL, 'Webtech', 'Nevyjadril'),
-(11, 5, NULL, 'Webtech', 'Nevyjadril'),
-(12, 15, 200, 'Webtech', 'Nevyjadril'),
-(13, 1, NULL, 'Matematika', 'Nevyjadril'),
-(14, 5, NULL, 'Matematika', 'Nevyjadril'),
-(15, 15, 20000, 'Matematika', 'Nevyjadril');
+(22, 1, NULL, 'Webtech', 'Nevyjadril'),
+(23, 5, 150, 'Webtech', 'Nie'),
+(24, 15, 200, 'Webtech', 'Áno');
 
 -- --------------------------------------------------------
 
@@ -161,12 +155,12 @@ INSERT INTO `users` (`id`, `id_ais`, `login`, `name`, `email`, `password`, `type
 (7, 0, '', 'test1', 'test@stuba.sk', NULL, 'ldap', 'student', '2019-05-07 12:54:36'),
 (9, 86184, 'xzuffad1', 'xzuffad1', 'xzuffad1@is.stuba.sk', NULL, 'ldap', 'student', '2019-05-07 13:44:26'),
 (10, NULL, 'admin', 'admin', 'admin@admin.sk', '$2y$10$CTshxGUGwdDlRU.RGUIoVeOCWYhX7hkpWqkyaF.S1ig2b6PCA/5Rq', 'regular', 'admin', '2019-05-07 14:32:06'),
-(44, 12345, 'xpriezvisko1@is.stuba.sk', 'Priezvisko1 Meno1', 'xpriezvisko1@is.stuba.sk', '$2y$10$sSp6dmBDFviAMoOcq10tcOiW3ow/fetu/uQx5bGVMjU.3ki1yyw7K', 'regular', 'student', '2019-05-11 14:33:45'),
-(45, 24598, 'xpriezvisko2@is.stuba.sk', 'Priezvisko2 Meno2', 'xpriezvisko2@is.stuba.sk', '$2y$10$T1fl1/ke/welGi39tTBAnuhMtV6HK6ZGGlL1zHoEcdg4ZLzGMJ3CK', 'regular', 'student', '2019-05-11 14:33:45'),
-(46, 54187, 'xpriezvisko3@is.stuba.sk', 'Priezvisko3 Meno3', 'xpriezvisko3@is.stuba.sk', '$2y$10$PsHQ9t3DyeCXw87vbbJemOZeyshhs5nPiQTGx0k1uRHoDhsOh0nyO', 'regular', 'student', '2019-05-11 14:33:45'),
-(47, 23581, 'xpriezvisko4@is.stuba.sk', 'Priezvisko4 Meno4', 'xpriezvisko4@is.stuba.sk', '$2y$10$3fCaw02kBi7fqtioelQR8efjRjvTjetbAlhqW/KY6GaQCEEGK9Txq', 'regular', 'student', '2019-05-11 14:33:45'),
-(48, 86145, 'xraslavsky@is.stuba.sk', 'Raslavský Dominik', 'xraslavsky@is.stuba.sk', NULL, 'ldap', 'student', '2019-05-11 14:33:45'),
-(49, 86151, 'xskachova@is.stuba.sk', 'Skachová Anna', 'xskachova@is.stuba.sk', NULL, 'ldap', 'student', '2019-05-11 14:33:45');
+(68, 12345, 'xpriezvisko1', 'Priezvisko1 Meno1', 'xpriezvisko1@is.stuba.sk', '$2y$10$dPZfc8EZhcnOyaai5fF9keiJ4k4gggcNQvGXTwJjD2fw6KUWo6ggS', 'regular', 'student', '2019-05-12 08:58:40'),
+(69, 24598, 'xpriezvisko2', 'Priezvisko2 Meno2', 'xpriezvisko2@is.stuba.sk', '$2y$10$9zkSSyr7lqrVCBjA1rHnke4F3NJ2vJJrm/Mnt.v3DxU3LakV/VsUC', 'regular', 'student', '2019-05-12 08:58:40'),
+(70, 54187, 'xpriezvisko3', 'Priezvisko3 Meno3', 'xpriezvisko3@is.stuba.sk', '$2y$10$TA9zxHjDZPGXpm7.yrERLe1FvzXHR6yCK4h6lCOhKzegFiKAmIz8.', 'regular', 'student', '2019-05-12 08:58:41'),
+(71, 23581, 'xpriezvisko4', 'Priezvisko4 Meno4', 'xpriezvisko4@is.stuba.sk', '$2y$10$sNlFdnGaCaHHoDF4Xq..pen.v5VYDtzyD6qGQMuSqEM9UxkHiY7Qm', 'regular', 'student', '2019-05-12 08:58:41'),
+(72, 86145, 'xraslavsky', 'Raslavský Dominik', 'xraslavsky@is.stuba.sk', NULL, 'ldap', 'student', '2019-05-12 08:58:41'),
+(73, 86151, 'xskachova', 'Skachová Anna', 'xskachova@is.stuba.sk', NULL, 'ldap', 'student', '2019-05-12 08:58:41');
 
 --
 -- Kľúče pre exportované tabuľky
@@ -221,7 +215,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pre tabuľku `history_login`
 --
 ALTER TABLE `history_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT pre tabuľku `migrations`
 --
@@ -231,17 +225,17 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT pre tabuľku `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 --
 -- AUTO_INCREMENT pre tabuľku `team`
 --
 ALTER TABLE `team`
-  MODIFY `id_timu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id_timu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT pre tabuľku `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
