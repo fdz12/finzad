@@ -2,10 +2,10 @@
 -- version 4.6.6deb5
 -- https://www.phpmyadmin.net/
 --
--- Hostiteľ: localhost:3306
--- Čas generovania: St 15.Máj 2019, 13:29
--- Verzia serveru: 5.7.25-0ubuntu0.18.04.2
--- Verzia PHP: 7.2.15-0ubuntu0.18.04.1
+-- Host: localhost:3306
+-- Generation Time: May 15, 2019 at 06:21 PM
+-- Server version: 5.7.25-0ubuntu0.18.04.2
+-- PHP Version: 7.2.15-0ubuntu0.18.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Databáza: `finzad`
+-- Database: `finzad`
 --
 
 -- --------------------------------------------------------
 
 --
--- Štruktúra tabuľky pre tabuľku `grade`
+-- Table structure for table `grade`
 --
 
 CREATE TABLE `grade` (
@@ -37,7 +37,7 @@ CREATE TABLE `grade` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Sťahujem dáta pre tabuľku `grade`
+-- Dumping data for table `grade`
 --
 
 INSERT INTO `grade` (`id`, `id_student`, `meno`, `predmet`, `rok`, `hlavicka`, `hodnoty`) VALUES
@@ -53,7 +53,7 @@ INSERT INTO `grade` (`id`, `id_student`, `meno`, `predmet`, `rok`, `hlavicka`, `
 -- --------------------------------------------------------
 
 --
--- Štruktúra tabuľky pre tabuľku `history_login`
+-- Table structure for table `history_login`
 --
 
 CREATE TABLE `history_login` (
@@ -63,7 +63,7 @@ CREATE TABLE `history_login` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
 --
--- Sťahujem dáta pre tabuľku `history_login`
+-- Dumping data for table `history_login`
 --
 
 INSERT INTO `history_login` (`id`, `id_user`, `datetime_login`) VALUES
@@ -76,24 +76,22 @@ INSERT INTO `history_login` (`id`, `id_user`, `datetime_login`) VALUES
 (7, 10, '2019-05-12 08:13:39'),
 (8, 10, '2019-05-12 08:46:41'),
 (9, 10, '2019-05-12 08:58:34'),
-(10, 10, '2019-05-12 16:14:14'),
-(11, 72, '2019-05-13 10:37:50'),
-(12, 10, '2019-05-15 08:28:25'),
-(13, 10, '2019-05-15 09:29:09'),
-(14, 10, '2019-05-15 11:17:12'),
-(15, 10, '2019-05-15 12:08:50'),
-(16, 10, '2019-05-15 12:39:14'),
-(17, 68, '2019-05-15 12:46:40'),
-(18, 68, '2019-05-15 12:49:52'),
-(19, 10, '2019-05-15 13:12:19'),
-(20, 68, '2019-05-15 13:13:10'),
-(21, 10, '2019-05-15 13:17:55'),
-(22, 68, '2019-05-15 13:28:02');
+(10, 10, '2019-05-15 07:00:59'),
+(11, 10, '2019-05-15 08:50:47'),
+(12, 10, '2019-05-15 09:47:18'),
+(13, 10, '2019-05-15 11:51:06'),
+(14, 10, '2019-05-15 14:11:14'),
+(15, 80, '2019-05-15 14:20:50'),
+(16, 10, '2019-05-15 14:28:57'),
+(17, 80, '2019-05-15 14:29:58'),
+(18, 80, '2019-05-15 16:11:56'),
+(19, 10, '2019-05-15 17:20:26'),
+(20, 80, '2019-05-15 17:20:58');
 
 -- --------------------------------------------------------
 
 --
--- Štruktúra tabuľky pre tabuľku `migrations`
+-- Table structure for table `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -103,7 +101,7 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Sťahujem dáta pre tabuľku `migrations`
+-- Dumping data for table `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -113,7 +111,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Štruktúra tabuľky pre tabuľku `password_resets`
+-- Table structure for table `password_resets`
 --
 
 CREATE TABLE `password_resets` (
@@ -125,7 +123,7 @@ CREATE TABLE `password_resets` (
 -- --------------------------------------------------------
 
 --
--- Štruktúra tabuľky pre tabuľku `student`
+-- Table structure for table `student`
 --
 
 CREATE TABLE `student` (
@@ -137,7 +135,7 @@ CREATE TABLE `student` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
 --
--- Sťahujem dáta pre tabuľku `student`
+-- Dumping data for table `student`
 --
 
 INSERT INTO `student` (`id`, `id_student`, `tim`, `body`, `odsuhlasenie`) VALUES
@@ -146,12 +144,19 @@ INSERT INTO `student` (`id`, `id_student`, `tim`, `body`, `odsuhlasenie`) VALUES
 (133, 54187, 23, 45, 'Áno'),
 (134, 23581, 23, 56, 'Áno'),
 (135, 86145, 24, 1, 'Áno'),
-(136, 86151, 24, 199, 'Áno');
+(136, 86151, 24, 199, 'Áno'),
+(137, 12345, 25, NULL, 'Nevyjadril'),
+(138, 24598, 26, NULL, 'Nevyjadril'),
+(139, 54187, 26, NULL, 'Nevyjadril'),
+(140, 23581, 26, NULL, 'Nevyjadril'),
+(141, 86145, 27, 50, 'Nevyjadril'),
+(142, 86151, 27, 60, 'Nevyjadril'),
+(143, 79704, 27, 20, 'Nie');
 
 -- --------------------------------------------------------
 
 --
--- Štruktúra tabuľky pre tabuľku `team`
+-- Table structure for table `team`
 --
 
 CREATE TABLE `team` (
@@ -163,18 +168,21 @@ CREATE TABLE `team` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Sťahujem dáta pre tabuľku `team`
+-- Dumping data for table `team`
 --
 
 INSERT INTO `team` (`id_timu`, `cislo_timu`, `body`, `predmet`, `odsuhlasene`) VALUES
 (22, 1, NULL, 'Webtech', 'Nevyjadril'),
 (23, 5, 150, 'Webtech', 'Nie'),
-(24, 15, 200, 'Webtech', 'Áno');
+(24, 15, 200, 'Webtech', 'Áno'),
+(25, 1, NULL, 'Webtech2', 'Nevyjadril'),
+(26, 5, NULL, 'Webtech2', 'Nevyjadril'),
+(27, 15, 130, 'Webtech2', 'Nevyjadril');
 
 -- --------------------------------------------------------
 
 --
--- Štruktúra tabuľky pre tabuľku `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -190,7 +198,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Sťahujem dáta pre tabuľku `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `id_ais`, `login`, `name`, `email`, `password`, `type`, `role`, `created_at`) VALUES
@@ -203,39 +211,34 @@ INSERT INTO `users` (`id`, `id_ais`, `login`, `name`, `email`, `password`, `type
 (70, 54187, 'xpriezvisko3', 'Priezvisko3 Meno3', 'xpriezvisko3@is.stuba.sk', '$2y$10$TA9zxHjDZPGXpm7.yrERLe1FvzXHR6yCK4h6lCOhKzegFiKAmIz8.', 'regular', 'student', '2019-05-12 08:58:41'),
 (71, 23581, 'xpriezvisko4', 'Priezvisko4 Meno4', 'xpriezvisko4@is.stuba.sk', '$2y$10$sNlFdnGaCaHHoDF4Xq..pen.v5VYDtzyD6qGQMuSqEM9UxkHiY7Qm', 'regular', 'student', '2019-05-12 08:58:41'),
 (72, 86145, 'xraslavsky', 'Raslavský Dominik', 'xraslavsky@is.stuba.sk', NULL, 'ldap', 'student', '2019-05-12 08:58:41'),
-(73, 86151, 'xskachova', 'Skachová Anna', 'xskachova@is.stuba.sk', NULL, 'ldap', 'student', '2019-05-12 08:58:41');
+(73, 86151, 'xskachova', 'Skachová Anna', 'xskachova@is.stuba.sk', NULL, 'ldap', 'student', '2019-05-12 08:58:41'),
+(80, 79704, 'xpichlik', 'Pichlík Zdenek', 'xpichlik@is.stuba.sk', NULL, 'ldap', 'student', '2019-05-15 14:20:15');
 
 --
--- Kľúče pre exportované tabuľky
+-- Indexes for dumped tables
 --
 
 --
--- Indexy pre tabuľku `grade`
---
-ALTER TABLE `grade`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexy pre tabuľku `history_login`
+-- Indexes for table `history_login`
 --
 ALTER TABLE `history_login`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_user` (`id_user`);
 
 --
--- Indexy pre tabuľku `migrations`
+-- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexy pre tabuľku `password_resets`
+-- Indexes for table `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indexy pre tabuľku `student`
+-- Indexes for table `student`
 --
 ALTER TABLE `student`
   ADD PRIMARY KEY (`id`),
@@ -243,13 +246,13 @@ ALTER TABLE `student`
   ADD KEY `id_student` (`id_student`);
 
 --
--- Indexy pre tabuľku `team`
+-- Indexes for table `team`
 --
 ALTER TABLE `team`
   ADD PRIMARY KEY (`id_timu`);
 
 --
--- Indexy pre tabuľku `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -257,39 +260,34 @@ ALTER TABLE `users`
   ADD KEY `id_ais` (`id_ais`);
 
 --
--- AUTO_INCREMENT pre exportované tabuľky
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT pre tabuľku `grade`
---
-ALTER TABLE `grade`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
---
--- AUTO_INCREMENT pre tabuľku `history_login`
+-- AUTO_INCREMENT for table `history_login`
 --
 ALTER TABLE `history_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
--- AUTO_INCREMENT pre tabuľku `migrations`
+-- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
--- AUTO_INCREMENT pre tabuľku `student`
+-- AUTO_INCREMENT for table `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
 --
--- AUTO_INCREMENT pre tabuľku `team`
+-- AUTO_INCREMENT for table `team`
 --
 ALTER TABLE `team`
-  MODIFY `id_timu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_timu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 --
--- AUTO_INCREMENT pre tabuľku `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
