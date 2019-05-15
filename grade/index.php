@@ -1,11 +1,4 @@
 <!doctype html>
-<?php
-	//toto neviem, či je okay alebo či to nejako inak treba urobiť
-	if(isset($_POST['predmet']))
-	{
-		header('Location: index.php?predmet='.$_POST['PredmetN']);
-	}
-?>
 <html lang="sk">
 <head>
     <meta charset="UTF-8">
@@ -83,18 +76,19 @@
             </section>
 			<section>
 				
-			<?php
-				// ak je session urobená a je adminom
-				if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
-				{
-					echo "<form enctype='multipart/form-data' action='index.php' method='POST'>
+				<?php
+					// ak je session urobená a je adminom
+					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
+					{
+							
+						echo "<form enctype='multipart/form-data' action='index.php' method='POST'>
 									<label> Školský rok </label>
 									<select name='year' required>
-										<option value='1819'>2018/2019</option>
-										<option value='1718'>2017/2018</option>
-										<option value='1617'>2016/2017</option>
-										<option value='1516'>2015/2016</option>
-										<option value='1415'>2014/2015</option>
+											<option value='2018/2019'>2018/2019</option>
+											<option value='2017/2018'>2017/2018</option>
+											<option value='2016/2017'>2016/2017</option>
+											<option value='2015/2016'>2015/2016</option>
+											<option value='2014/2015'>2014/2015</option>
 								 </select> <br>
 									<label> Názov predmetu </label> <input type='text' name='subject' required> <br>
 									<label> Vyberte súbor </label> <input type='file' name='userfile' accept='.csv' required /> <br>
@@ -107,321 +101,231 @@
 							</section>
 							<section>";
 					
-					
-					function uploadFile($userfile){
-					
-						$uploadfile = getcwd()."/". $userfile;
 						
-						if (file_exists($uploadfile)){
-							  echo "Súbor s nazvom $uploadfile uz existuje\n";
-							} 
-						  else{
-							  if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $uploadfile)) {
-								  echo "Súbor bol úspešne pridaný do priečninku Files\n";
-							  } else{
-								  echo "Chyba pri nahrávaní súboru!\n";
+						function uploadFile($userfile){
+						
+							$uploadfile = getcwd()."/". $userfile;
+							
+							if (file_exists($uploadfile)){
+								  echo "Súbor s nazvom $uploadfile uz existuje\n";
+								} 
+							  else{
+								  if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $uploadfile)) {
+									  echo "Súbor bol úspešne pridaný do priečninku Files\n";
+								  } else{
+									  echo "Chyba pri nahrávaní súboru!\n";
+								  }
 							  }
-						  }
-						echo "userfile".$uploadfile;
+							echo "userfile".$uploadfile;
 
-					}
+						}
 
-					include "../config.php";
+						include "../config.php";
+						
+						$conn = new mysqli($servername, $username, $password, $dbname);
+							if ($conn->connect_error) {
+								die("Connection failed: " . $conn->connect_error);
+							} else{
+								// echo "pripojene k db";
+							}
+							mysqli_set_charset($conn,"utf8");  
+														
+						if (isset($_POST['zmaz']))
+						{
+							$sqlZmaz = "DELETE from grade where predmet = '". $_POST['predmet'] ."' and rok = '". $_POST['rok'] ."'";
+							mysqli_query($conn, $sqlZmaz);
+						}
+							
+							
+						if (isset($_POST['submit'])){
+							   
 					
-					$conn = new mysqli($servername, $username, $password, $dbname);
+							$year = $_POST['year'];
+							$subject = $_POST['subject'];
+							$separator = $_POST['delim'];
+							$delim = "";
+
+							if($separator == "coma") $delim = ",";
+							if($separator == "dotcoma") $delim = ";";
+
+							//echo "toto je delim ".$delim;
+							//echo $subject.$year.$separator;
+
+							// pri kazdom vkladani udajov vymaz tabulku
+							//mysqli_query($conn,'TRUNCATE TABLE student');
+
+							$filename = $_FILES['userfile']['name'];
+							uploadfile($filename);
+							// cela cesta k suboru
+							//$path = realpath($filename);
+							//echo $path;
+
+							// subor musi byt na servri
+							// https://stackoverflow.com/questions/2805427/how-to-extract-data-from-csv-file-in-php
+							// CITANIE S CSV    
+							if (($handle = fopen($filename, "r")) !== FALSE) {
+								//vyriešenie hlavičky
+								$data = fgetcsv($handle, 1000, $delim); //data je poľom s udajmi hlavičky								
+								$hlavicka = implode("!", $data); //serializujeme ho do stringu na ulozenie do db
+								$hlavicka = str_replace('"','',$hlavicka);
+								$hlavicka = str_replace("\xEF\xBB\xBF",'',$hlavicka); //zmaze znak FEFF, ktorý sa tam ktovie prečo objavuje a kazí sql
+								//echo "<br>" . $data[0] . "<br>";
+								
+								while (($data = fgetcsv($handle, 1000, $delim)) !== FALSE) {
+									
+									//ak neexistuje tím s daným id tak ho vytvor
+									$id_student = $data[0];
+									$meno_student = $data[1];
+									//odstranime id a meno z pola
+									array_splice($data, 0, 1); // odstráni prvok na pozícii 0 a preindexuje
+									array_splice($data, 0, 1); // odstráni prvok na pozícii 0 a preindexuje
+									$hodnoty = implode("!", $data);
+									//echo "<br>" . $hodnoty . "<br>";
+									$sqlGrade = "INSERT INTO grade (id_student, meno, predmet, rok, hlavicka, hodnoty) VALUES ('". $id_student ."', '". $meno_student ."', '". $subject ."', '". $year ."', '". $hlavicka ."', '". $hodnoty ."')";
+									//echo "<br>" . $sqlGrade . "<br>";
+									mysqli_query($conn, $sqlGrade);			
+								}
+								fclose($handle);
+							}
+							unlink(getcwd()."/".$filename);    // odstran subor po precitani
+
+						}
+						
+						
+						$predmet = "";
+						$rok = "";
+						$existujePredmet = "false";
+						$sqlPredmety = "Select distinct predmet, rok from grade";
+						$resultPredmety = mysqli_query($conn, $sqlPredmety);
+						if (mysqli_num_rows($resultPredmety) > 0) 
+						{		
+							$existujePredmet = "true";
+							echo "<br><form enctype='multipart/form-data' action='index.php' method='POST'>";
+							echo "<select name='PredmetN' required>";
+							while($rowP = mysqli_fetch_assoc($resultPredmety)) 
+							{
+								echo "<option value='". $rowP['predmet'] ."!". $rowP['rok'] ."'>". $rowP['predmet'] . ", " . $rowP['rok'] ."</option>";
+								$predmet = $rowP['predmet'];
+							}
+							echo "</select>";
+							
+							
+							echo "<input type='submit' name='zobraz' value='Zobraz hodnotenia' /> ";
+							echo "</form>";					
+						}	
+						
+						if (isset($_POST['zobraz']))
+						{
+							//echo "<br> Predmet i rok boli zvolene<br>";
+							$hlavicka = "";
+							$hodnoty = explode("!", $_POST['PredmetN']);
+							echo "<br><h3>" . $hodnoty[0] . " z roku " . $hodnoty[1] . "</h3>";
+							$sqlZobraz = "Select * from grade where predmet = '". $hodnoty[0] ."' and rok = '". $hodnoty[1] ."'";
+							$resultZobraz = mysqli_query($conn, $sqlZobraz);
+							if (mysqli_num_rows($resultZobraz) > 0) 
+							{	
+								//echo "<br>Sql prebehlo a má výsledky<br>";
+								while($rowZobraz = mysqli_fetch_assoc($resultZobraz)) 
+								{
+									if($rowZobraz['hlavicka'] != $hlavicka)
+									{
+										if($hlavicka != "")
+										{
+											echo "</tbody></table>";
+										}
+										$hlavicka = $rowZobraz['hlavicka'];
+										echo "<table><thead><tr>";
+										$pole = explode('!', $hlavicka);
+										foreach ($pole as $hodnota) {
+											echo "<th>" . $hodnota . "</th>";
+										}
+										echo "</tr></thead><tbody>";										
+										$pole = explode('!', $rowZobraz['hodnoty']);
+										
+										echo "<tr>";
+										echo "<td> " . $rowZobraz['id_student'] . "</td>";
+										echo "<td> " . $rowZobraz['meno'] . "</td>";
+										foreach ($pole as $hodnota) {
+											echo "<td>" . $hodnota . "</td>";
+										}
+										echo "</tr>";										
+									}
+									else
+									{
+																				
+										$pole = explode('!', $rowZobraz['hodnoty']);
+										
+										echo "<tr>";
+										echo "<td> " . $rowZobraz['id_student'] . "</td>";
+										echo "<td> " . $rowZobraz['meno'] . "</td>";
+										foreach ($pole as $hodnota) {
+											echo "<td>" . $hodnota . "</td>";
+										}
+										echo "</tr>";			
+									}
+								}
+								echo "</tbody></table>";
+								echo "<br>";
+								echo "<form enctype='multipart/form-data' action='index.php' method='POST'>
+									<input type='hidden' name='predmet' value='". $hodnoty[0] ."'>
+									<input type='hidden' name='rok' value='". $hodnoty[1] ."'>
+									<input type='submit' name='zmaz' value='Zmaž hodnotenia' />
+									</form>";
+							}
+						}
+						
+						
+					}
+					else if(isset($_SESSION['username']) && $_SESSION['role'] == "student")
+					{
+						include "../config.php";
+						
+						$conn = new mysqli($servername, $username, $password, $dbname);
 						if ($conn->connect_error) {
 							die("Connection failed: " . $conn->connect_error);
 						} else{
 							// echo "pripojene k db";
 						}
-						mysqli_set_charset($conn,"utf8");  
+						mysqli_set_charset($conn,"utf8");
 						
-					if (isset($_POST['submit'])){
-						   
-				
-						$year = $_POST['year'];
-						$subject = $_POST['subject'];
-						$separator = $_POST['delim'];
-						$delim = "";
-
-						if($separator == "coma") $delim = ",";
-						if($separator == "dotcoma") $delim = ";";
-
-						//echo "toto je delim ".$delim;
-						//echo $subject.$year.$separator;
-
-						// pri kazdom vkladani udajov vymaz tabulku
-						//mysqli_query($conn,'TRUNCATE TABLE student');
-
-						$filename = $_FILES['userfile']['name'];
-						uploadfile($filename);
-						// cela cesta k suboru
-						//$path = realpath($filename);
-						//echo $path;
-
-						// subor musi byt na servri
-						// https://stackoverflow.com/questions/2805427/how-to-extract-data-from-csv-file-in-php
-						// CITANIE S CSV    
-						if (($handle = fopen($filename, "r")) !== FALSE) {
-							//echo "<br>otvoril subor<br>";
-							$idPridanehoTimu = array();
-							while (($data = fgetcsv($handle, 1000, $delim)) !== FALSE) {
-								
-								//ak neexistuje tím s daným id tak ho vytvor
-								$sqlTim = "select id_timu from team where cislo_timu=$data[4] AND predmet= '" .$_POST['subject'] . "'"; 
-								$resultTim = mysqli_query($conn, $sqlTim);
-								if (mysqli_num_rows($resultTim) == 0) {
-									$sqlTim = "INSERT INTO team (cislo_timu, predmet) VALUES ($data[4], '" . $_POST['subject'] . "')";
-									mysqli_query($conn, $sqlTim);
-									
-									$sqlIdTimu = "select id_timu from team where cislo_timu=$data[4] AND predmet= '" .$_POST['subject'] . "'"; 
-									$resultID = mysqli_query($conn, $sqlIdTimu);  
-									$pomID = mysqli_fetch_assoc($resultID);
-									$idTimu = $pomID['id_timu'];
-									array_push($idPridanehoTimu, $idTimu);
-									
-									//vytvor riadok v tabulke student
-									$pom = (int) filter_var($data[0], FILTER_SANITIZE_NUMBER_INT); //toto tu je lebo inak nevedelo pridať prvý záznam z .csv do tabuľky
-									//$sql = "INSERT INTO student (id_student, meno, email, heslo, tim) VALUES ($pom, '".$data[1]."', '".$data[2]."', '".$data[3]."', $data[4])";
-									$sql = "INSERT INTO student (id_student, tim) VALUES ($pom, $idTimu)";
-									$result = mysqli_query($conn, $sql);
-							   
-									//vytvor uzivatela
-									$timestamp = date('Y-m-d H:i:s');
-									$sqlUzivatel = "";
-									$pieces = explode("@", $data[2]);
-									if($data[3] != "NULL")
-									{
-										$hashed_password = password_hash($data[3], PASSWORD_DEFAULT);
-										$sqlUzivatel = "INSERT INTO users (id_ais, login, name, email, password, type, role, created_at) VALUES ($pom, '".$pieces[0]."', '".$data[1]."', '".$data[2]."', '".$hashed_password."', 'regular', 'student', '$timestamp')";
-									}
-									else
-										$sqlUzivatel = "INSERT INTO users (id_ais, login, name, email, type, role, created_at) VALUES ($pom, '".$pieces[0]."', '".$data[1]."', '".$data[2]."', 'ldap', 'student', '$timestamp')";
-								
-									$result = mysqli_query($conn, $sqlUzivatel);
-								}
-								else if (mysqli_num_rows($resultTim) == 1)
-								{
-									$pomID = mysqli_fetch_assoc($resultTim);								
-									$idTimu = $pomID['id_timu'];
-									$pieces = explode("@", $data[2]);
-									if(in_array($idTimu, $idPridanehoTimu))
-									{
-										//vytvor riadok v tabulke student
-										$pom = (int) filter_var($data[0], FILTER_SANITIZE_NUMBER_INT); //toto tu je lebo inak nevedelo pridať prvý záznam z .csv do tabuľky
-										//$sql = "INSERT INTO student (id_student, meno, email, heslo, tim) VALUES ($pom, '".$data[1]."', '".$data[2]."', '".$data[3]."', $data[4])";
-										$sql = "INSERT INTO student (id_student, tim) VALUES ($pom, $idTimu)";
-										$result = mysqli_query($conn, $sql);
-							   
-										//vytvor uzivatela
-										$timestamp = date('Y-m-d H:i:s');
-										$sqlUzivatel = "";
-										if($data[3] != "NULL")
-										{
-											$hashed_password = password_hash($data[3], PASSWORD_DEFAULT);
-											$sqlUzivatel = "INSERT INTO users (id_ais, login, name, email, password, type, role, created_at) VALUES ($pom, '".$pieces[0]."', '".$data[1]."', '".$data[2]."', '".$hashed_password."', 'regular', 'student', '$timestamp')";
-										}
-										else
-											$sqlUzivatel = "INSERT INTO users (id_ais, login, name, email, type, role, created_at) VALUES ($pom, '".$pieces[0]."', '".$data[1]."', '".$data[2]."', 'ldap', 'student', '$timestamp')";
-								
-										$result = mysqli_query($conn, $sqlUzivatel);
-									}
-								}
-							   
-							}
-							fclose($handle);
-						}
-					unlink(getcwd()."/".$filename);    // odstran subor po precitani
-
-					}	
-					
-					if(isset($_POST['change'])) //ak boli nastavené body
-					{
-						$sqlPridajBody = "UPDATE team SET body='$_POST[body]' WHERE id_timu='$_POST[idTimu]'";
-						mysqli_query($conn, $sqlPridajBody);
-					}
-					
-					if(isset($_POST['suhlas'])) //ak bol stlačený úhlas tak to odsúhlasí
-					{
-						$sqlNastavSuhlas = "UPDATE team SET odsuhlasene='Áno' WHERE id_timu='$_POST[idTimu]'";
-						mysqli_query($conn, $sqlNastavSuhlas);
-					}
-					
-					if(isset($_POST['nesuhlas'])) //ak bol stlačený nesúhlas tak resetuje body i súhlasy
-					{
-						$sqlNastavSuhlas = "UPDATE team SET odsuhlasene='Nie' WHERE id_timu='$_POST[idTimu]'";
-						mysqli_query($conn, $sqlNastavSuhlas);
-					}
-					
-					//Ak existujú záznamy pre nejaký predmet ukáž tlačidlo na ich zobrazenie.
-					$predmet = "";
-					$existujePredmet = "false";
-					$sqlPredmety = "Select distinct predmet from team";
-					$resultPredmety = mysqli_query($conn, $sqlPredmety);
-					if (mysqli_num_rows($resultPredmety) > 0) 
-					{		
-						$existujePredmet = "true";
-						echo "<br><form enctype='multipart/form-data' action='index.php' method='POST'>";
-						echo "<select name='PredmetN' required>";
-						while($rowP = mysqli_fetch_assoc($resultPredmety)) 
+						$id_student = "";
+						
+						$sqlID = "Select id_ais from users where id = '". $_SESSION['id'] ."'";
+						$resultID = mysqli_query($conn, $sqlID);
+						if (mysqli_num_rows($resultID) > 0) 
 						{
-							echo "<option value=". $rowP['predmet'] .">". $rowP['predmet'] . "</option>";
-							$predmet = $rowP['predmet'];
+							$row = mysqli_fetch_assoc($resultID);
+							$id_student = $row['id_ais'];
 						}
-						echo "</select>";
-						echo "<input type='submit' name='predmet' value='Zobraz tímy' /> ";
-						echo "</form>";					
-					}
-										
-				
-					if (isset($_GET['predmet']))
-					{
-						// VYPISANIE DO TABULIEK	
-						$predmet = $_GET['predmet'];
-					}
-					
-					if ($existujePredmet == "true")
-					{
-						echo "<h2><u>" . $predmet ."</u></h2>";
-						$sql2 = "SELECT * FROM team where predmet='" . $predmet ."'";
-						$result2 = mysqli_query($conn, $sql2);  
-						if (mysqli_num_rows($result2) > 0) {
-							while($row2 = mysqli_fetch_assoc($result2)) {
-
-								
-								$nastaveneBody = "false";
-								$rozdeleneBody = "true";
-								$odsuhlaseneBody = "true";
-								$odsuhlaseneBodyAdminom = "none";
-								$body = 0;
-								if(is_numeric($row2['body']))
-								{
-									$body = $row2['body'];
-									$nastaveneBody = "true";
+						$sqlZobraz = "Select * from grade where id_student = '". $id_student ."'";
+						//echo "<br> $sqlZobraz <br>";
+						$resultZobraz = mysqli_query($conn, $sqlZobraz);
+						if (mysqli_num_rows($resultZobraz) > 0) 
+						{
+							while($rowZobraz = mysqli_fetch_assoc($resultZobraz)) 
+							{
+								echo "<h3>" . $rowZobraz['predmet'] . " z roku " . $rowZobraz['rok'] . "</h3>";
+								echo "<table><thead><tr>";
+								$pole = explode('!', $rowZobraz['hlavicka']);
+								foreach ($pole as $hodnota) {
+									echo "<th>" . $hodnota . "</th>";
 								}
-								if($row2['odsuhlasene'] == "Áno")
-									$odsuhlaseneBodyAdminom = "true";								 
-									 
-								if($row2['odsuhlasene'] == "Nie")
-									$odsuhlaseneBodyAdminom = "false";
-									 
-								
-								
-								if ($nastaveneBody == "true")
-									echo "<h3> Členovia tímu č. ".$row2['cislo_timu']." s " . $body . " bodmi</h3>";
-								else
-									echo "<h3> Členovia tímu č. ".$row2['cislo_timu']."</h3>";
-								
-								$sql3 = "select * from student join users on id_student=id_ais WHERE tim=".$row2['id_timu'];
-								$result3 = mysqli_query($conn, $sql3);  
-								if (mysqli_num_rows($result3) > 0) {
-									echo "<table>
-										<thead><tr><th>ID</th>
-												  <th>Meno</th>
-												  <th>Email</th>
-												  <th>Počet bodov</th>
-												  <th>Súhlas</th>
-												</tr></thead><tbody>";
-
-									while($row = mysqli_fetch_assoc($result3)) {
-										 echo "<tr><td>" . $row['id_student']."</td>
-												   <td>" . $row['name']."</td>
-												   <td>" . $row['email']."</td>";  
-										 if(is_numeric($row['body']))
-											 echo "<td>" . $row['body'] . "</td>";
-										 else 
-										 {
-											 echo "<td></td>";
-											 $rozdeleneBody = "false";
-										 }
-										 echo "<td> " . $row['odsuhlasenie'] . "</td></tr>";
-										 if ($row['odsuhlasenie'] != "Áno")
-											 $odsuhlaseneBody = "false";
-									 }
-							
-									 echo "</tbody></table>";
+								echo "</tr></thead><tbody>";										
+								$pole = explode('!', $rowZobraz['hodnoty']);
 									
-									//echo "<br>$nastaveneBody<br>";
-									if($nastaveneBody == "false") //ak nemá nastavené body tak ukáže formulár na nastavenie
-									{
-										echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
-										echo "<input type='number' id='body".$row2['id_timu']."' name='body'>";
-										echo "<input type='hidden' name='idTimu' value=" . $row2['id_timu'] . ">";
-										// ZMENA POMOCOU AJAX alebo XMLRPC!!!
-										echo "<input type='submit' name='change' value='Change'>";
-										echo "</form>";
-									}
-									
-									if($rozdeleneBody == "true" && $odsuhlaseneBody == "true" && $odsuhlaseneBodyAdminom == "none")
-									{
-										echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
-										echo "<input type='hidden' name='idTimu' value=" . $row2['id_timu'] . ">";									
-										echo "<input type='submit' name='suhlas' value='Súhlasím'>";
-										echo "</form>";
-										
-										echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
-										echo "<input type='hidden' name='idTimu' value=" . $row2['id_timu'] . ">";									
-										echo "<input type='submit' name='nesuhlas' value='Nesúhlasím'>";
-										echo "</form>";
-									}
-									else if($odsuhlaseneBodyAdminom == "true")
-									{
-										echo "Rozdelenie bodov bolo odsúhlasené.<br>";
-									}
-									else if($odsuhlaseneBodyAdminom == "false")
-									{
-										echo "Rozdelenie bodov bolo zamietnuté.<br>";
-									}
-								} else {
-									 echo "you have no records";
+								echo "<tr>";
+								echo "<td> " . $rowZobraz['id_student'] . "</td>";
+								echo "<td> " . $rowZobraz['meno'] . "</td>";
+								foreach ($pole as $hodnota) {
+									echo "<td>" . $hodnota . "</td>";
 								}
-
+								echo "</tr>";
+								echo "</tbody></table><br>";								
 							}
-						} else {
-							 echo "you have no records";
 						}
-					
-
-						// -------------------------------------- KU GRAFU S TEAMS -----------------------------------
-						$pocetTimov = 0; $ano=0; $nie=0; $nevie = 0;
-						$sql4 = "SELECT COUNT(*) as pocet FROM team where predmet='" . $predmet ."'";
-						$result4 = mysqli_query($conn, $sql4);  
-						if (mysqli_num_rows($result4) > 0) {
-							$row = mysqli_fetch_assoc($result4);
-							$pocetTimov = $row['pocet'];
-						}
-
-						$sql4 = "SELECT Count(*) as pocet FROM team WHERE odsuhlasene='Nevyjadril' and predmet='" . $predmet ."'";
-						$result4 = mysqli_query($conn, $sql4);  
-						if (mysqli_num_rows($result4) > 0) {
-							$row = mysqli_fetch_assoc($result4);
-							$nevie = $row['pocet'];
-						}
-
-						$sql4 = "SELECT Count(*) as pocet FROM team WHERE odsuhlasene='Áno' and predmet='" . $predmet ."'";
-						$result4 = mysqli_query($conn, $sql4);  
-						if (mysqli_num_rows($result4) > 0) {
-							$row = mysqli_fetch_assoc($result4);
-							$ano = $row['pocet'];
-						}
-
-						$sql4 = "SELECT Count(*) as pocet FROM team WHERE odsuhlasene='Nie' and predmet='" . $predmet ."'";
-						$result4 = mysqli_query($conn, $sql4);  
-						if (mysqli_num_rows($result4) > 0) {
-							$row = mysqli_fetch_assoc($result4);
-							$nie = $row['pocet'];
-						}
-
-						echo "pocet timov".$pocetTimov." ".$ano." ".$nie." ".$nevie;
-
-						$dataPoints = array( 
-							array("label"=>"súhlasili", "y"=>($ano/$pocetTimov)),
-							array("label"=>"nesúhlasili", "y"=>($nie/$pocetTimov)),
-							array("label"=>"nevyjadrili sa", "y"=>($nevie/$pocetTimov))
-						);
+						
 					}
-				}
-     ?>
+				?>
 			</section>
         </div>
     </main>
@@ -453,30 +357,7 @@
         </div>
     </footer>
 
-     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-     <script>
-        // https://canvasjs.com/php-charts/pie-chart/
-        window.onload = function() {
-                 
-        var chart = new CanvasJS.Chart("chartContainer", {
-            animationEnabled: true,
-            title: {
-                text: ""
-            },
-            subtitles: [{
-                text: ""
-            }],
-            data: [{
-                type: "pie",
-                yValueFormatString: "#,##0.00\"%\"",
-                indexLabel: "{label} ({y})",
-                dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-            }]
-        });
-        chart.render();
-         
-        }
-    </script>
+    
 </body>
 
 </html>
