@@ -420,7 +420,136 @@
 								array("label"=>"nevyjadrili sa", "y"=>($nevie/$pocetTimov))
 							);
 						}
+					}else /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					if(isset($_SESSION['username']) && $_SESSION['role'] == "student"){
+						
+						include "../config.php";
+						
+						$conn = new mysqli($servername, $username, $password, $dbname);
+						if ($conn->connect_error) {
+							die("Connection failed: " . $conn->connect_error);
+						}
+						mysqli_set_charset($conn,"utf8");  
+						
+						//get information about current student
+						$sql= "SELECT id_ais FROM users WHERE login=\"".$_SESSION['username']."\"";
+						$result = mysqli_query($conn, $sql);
+						if (mysqli_num_rows($result) > 0) {
+								$row = mysqli_fetch_assoc($result);
+								$ais_id = $row['id_ais'];
+						}						
+						
+						//POST//////////////////////////////////////////////////////////////////////////////////////////
+						if (isset($_POST['submit'])){
+							$k = 0;
+							$sucet = 0;
+							while(isset($_POST['body'][$k])){
+								$sucet += $_POST['body'][$k];
+								$k++;
+							}
+							$sql = "SELECT body FROM team WHERE id_timu =".$_POST['team'];
+							$result = mysqli_query($conn, $sql);
+							$row = $result->fetch_assoc();
+							if(is_null($row['body']))
+								echo "<p style=\"color:red\">Ešte nemáte zadelené body!</p>";
+							else{
+								if($sucet !=$row['body'])
+								echo "<p style=\"color:red\">Súčet individualnich bodov sa musí rovnať bodom tímu!</p>";
+								else{
+									$sql = "SELECT id_student FROM student WHERE tim=".$_POST['team'];
+									$result = mysqli_query($conn, $sql);
+									$j=0;
+									while ($members = $result->fetch_assoc()) {
+										$sql = "UPDATE student SET body =".$_POST['body'][$j]." WHERE id_student=".$members['id_student']." AND tim=".$_POST['team'];
+										$j++;
+										mysqli_query($conn, $sql);
+									}
+								}
+							}
+						}
+						
+						if (isset($_POST['suhlas'])){
+							$sql = "UPDATE student SET odsuhlasenie=\"Áno\" WHERE id_student=".$ais_id." AND tim=".$_POST['team'];
+							mysqli_query($conn, $sql);
+						}
+						
+						if (isset($_POST['odmietnutie'])){
+							$sql = "UPDATE student SET odsuhlasenie=\"Nie\" WHERE id_student=".$ais_id." AND tim=".$_POST['team'];
+							mysqli_query($conn, $sql);
+						}
+							
+							
+						////////////////////////////////////////////////////////////////////////////////////////////////
+						
+						// get teams
+						$sql = "SELECT tim FROM student WHERE id_student =".$ais_id;
+						$resultedteams = mysqli_query($conn, $sql);
+						
+						if (mysqli_num_rows($resultedteams) > 0) {
+							
+							while ($team = $resultedteams->fetch_assoc()) {
+								
+								$sql = "SELECT predmet,body,odsuhlasene,cislo_timu FROM team WHERE id_timu =".$team['tim'];
+								$resultedteam = mysqli_query($conn, $sql);
+								
+								if (mysqli_num_rows($resultedteam) > 0) {
+									$rowteam = $resultedteam->fetch_assoc();
+									
+									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']."</th></tr>";
+									echo "<tr><th>Tím: ".$rowteam['cislo_timu']."</th><th>Celkové body: ".$rowteam['body']."</th> <th colspan=\"2\">";
+									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Akceptované";
+									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Neakceptované";
+									echo "</th></tr>";
+									echo "<tr><th>Email</th><th>Meno</th><th>Body</th><th>Súhlas</th></tr>";
+									
+									$sql = "SELECT student.body, student.odsuhlasenie, users.name, users.email, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais WHERE student.tim=".$team['tim'];
+									$result= mysqli_query($conn, $sql);
+									$i=0;
+									if (mysqli_num_rows($result) > 0) {
+										while($row = $result->fetch_assoc()){
+											echo "<tr><td>".$row['email']."</td><td>".$row['name']."</td><td>";
+											if(is_null($row['body'])){
+												echo "<input name=\"body[".$i."]\" type=\"number\" required>";
+												$i++;
+											}
+											else 
+												echo $row['body'];
+											echo "</td><td>";
+											
+											if(!is_null($row['body']) and $row['odsuhlasenie']=="Nevyjadril" and $ais_id == 	$row['id_ais'])
+												echo "<input type='submit' name='suhlas' value='Súhlasím' />
+												<input type='submit' name='odmietnutie' value='Nesúhlasím' />";
+											else{
+												
+												if($row['odsuhlasenie']=="Nie")
+													echo "Nesúhlasí";
+												
+												if($row['odsuhlasenie']=="Áno")
+													echo "Súhlasí";
+											
+												if($row['odsuhlasenie']=="Nevyjadril")
+													echo "Nevyjadril";	
+												
+											}
+																							
+											echo "</td></tr>";
+										}
+									}
+									if(is_null($row['body'])){
+										echo "<input type=\"hidden\" name=\"team\" value=\"".$team['tim']."\">";
+										echo "<tr><td colspan=\"4\"><input type='submit' name='submit' value='Rozdeliť body' /></td></tr>";
+									}
+									echo "</table></form>";
+								}
+								
+    						}
+							
+						}
+						
 					}
+				
+				
+					
 				?>
 			</section>
         </div>
