@@ -74,6 +74,81 @@
             <section>
                 <h4>Rozposielanie údajov</h4>
             </section>
+			<section>
+				<?php
+					// if is admin (MAIN)
+					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
+					{
+						echo "<br><h5>Generovanie hesiel</h5>";
+						echo "	<form enctype='multipart/form-data' action='index.php' method='POST'>
+									<label> Oddeľovač </label> 
+									<label> Vyberte súbor </label> <input type='file' name='userfile' accept='.csv' required /> <br>
+									<label><input type='radio' name='delim' value='coma' required> čiarka </label>
+									<label><input type='radio' name='delim' value='dotcoma' required> bodkočiarka </label> <br>
+									<input type='submit' name='submit1' value='Import' /> 
+								</form>".$returning1."<hr>";
+						
+						
+						echo "<h5>Rozposlanie údajov</h5>";
+						
+					}
+				
+					// POST //////////////
+					if (isset($_POST['submit1'])){
+						//get delimiter
+						if($_POST['delim'] == "comma")
+							$delimiter1 = ",";
+						if($_POST['delim'] == "dotcoma")
+							$delimiter1 = ";";
+						//get file
+						$filename1 = $_FILES['userfile']['name'];
+						//upload file
+						fileupload($filename1);
+						//generate passwords
+						$returning1 = passgenerate($filename1, $delimiter1);
+					}
+					///////
+					if (isset($_POST['submit2'])){
+						
+					}
+				
+					//file upload ///////////////////////////////////////////////////////////////////
+					function fileupload($userfile){
+						$uploadfile = getcwd()."/". $userfile;
+						
+						if (file_exists($uploadfile)){
+							  echo "Súbor s nazvom $uploadfile uz existuje\n";
+							} 
+						  else{
+							  if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $uploadfile)) {
+								  echo "Súbor bol úspešne pridaný do priečninku Files\n";
+							  } else{
+								  echo "Chyba pri nahrávaní súboru!\n";
+							  }
+						  }
+						echo "userfile".$uploadfile;
+					}
+					/////////////////////////////////////////////////////////////////////////////////
+				
+					//generate passwords ////////////////////////////////////////////////////////////
+					function passgenerate($filename, $delim){
+						//ak sa da otvorit subor
+						if (($handle = fopen($filename, "r+")) !== FALSE) {
+							
+							//prechadzanie suborom
+							while (($data = fgetcsv($handle, 1000, $delim)) !== FALSE) {
+								$data[5] = "aaa";
+								fputcsv($handle, $data);
+							}
+							
+							fclose($handle);
+							return "<a href=".$filename.">Stiahnutie</a>";
+						}
+						else return "Chyba pri otvorení súboru!\n";
+					}
+					/////////////////////////////////////////////////////////////////////////////////
+				?>
+			</section>
         </div>
     </main>
     
