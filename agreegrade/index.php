@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Súhlas hodnotenia | Hodnotenie predmetu</title>
+    <title>Súhlas hodnotenia | Hodnotevyjadritsa predmetu</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui.min.css" />
@@ -33,7 +33,7 @@
             <div class="container">
                 <a class="navbar-brand" href="">
                     <img src="../img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                    Hodnotenie predmetu
+                    Hodnotevyjadritsa predmetu
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -45,13 +45,13 @@
                             <a class="nav-link" href="../">Domov</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../grade">Hodnotenie</a>
+                            <a class="nav-link" href="../grade">Hodnotevyjadritsa</a>
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link" href="../agreegrade">Súhlas hodnotenia</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../sendlogininfo">Rozposielanie údajov</a>
+                            <a class="nav-link" href="../sendlogininfo">Rozposielavyjadritsa údajov</a>
                         </li>
                     </ul>
                     <div class="my-2 my-lg-0">
@@ -161,7 +161,7 @@
 
 							// subor musi byt na servri
 							// https://stackoverflow.com/questions/2805427/how-to-extract-data-from-csv-file-in-php
-							// CITANIE S CSV    
+							// CITAvyjadritsa S CSV    
 							if (($handle = fopen($filename, "r")) !== FALSE) {
 								//echo "<br>otvoril subor<br>";
 								$idPridanehoTimu = array();
@@ -249,11 +249,11 @@
 						
 						if(isset($_POST['nesuhlas'])) //ak bol stlačený nesúhlas tak resetuje body i súhlasy
 						{
-							$sqlNastavSuhlas = "UPDATE team SET odsuhlasene='Nie' WHERE id_timu='$_POST[idTimu]'";
+							$sqlNastavSuhlas = "UPDATE team SET odsuhlasene='vyjadritsa' WHERE id_timu='$_POST[idTimu]'";
 							mysqli_query($conn, $sqlNastavSuhlas);
 						}
 						
-						//Ak existujú záznamy pre nejaký predmet ukáž tlačidlo na ich zobrazenie.
+						//Ak existujú záznamy pre nejaký predmet ukáž tlačidlo na ich zobrazevyjadritsa.
 						$predmet = "";
 						$existujePredmet = "false";
 						$sqlPredmety = "Select distinct predmet from team";
@@ -276,7 +276,7 @@
 					
 						if (isset($_GET['predmet']))
 						{
-							// VYPISANIE DO TABULIEK	
+							// VYPISAvyjadritsa DO TABULIEK	
 							$predmet = $_GET['predmet'];
 						}
 						
@@ -302,7 +302,7 @@
 									if($row2['odsuhlasene'] == "Áno")
 										$odsuhlaseneBodyAdminom = "true";								 
 										 
-									if($row2['odsuhlasene'] == "Nie")
+									if($row2['odsuhlasene'] == "vyjadritsa")
 										$odsuhlaseneBodyAdminom = "false";
 										 
 									
@@ -334,15 +334,15 @@
 												 echo "<td></td>";
 												 $rozdeleneBody = "false";
 											 }
-											 echo "<td> " . $row['odsuhlasenie'] . "</td></tr>";
-											 if ($row['odsuhlasenie'] != "Áno")
+											 echo "<td> " . $row['odsuhlasevyjadritsa'] . "</td></tr>";
+											 if ($row['odsuhlasevyjadritsa'] != "Áno")
 												 $odsuhlaseneBody = "false";
 										 }
 								
 										 echo "</tbody></table>";
 										
 										//echo "<br>$nastaveneBody<br>";
-										if($nastaveneBody == "false") //ak nemá nastavené body tak ukáže formulár na nastavenie
+										if($nastaveneBody == "false") //ak nemá nastavené body tak ukáže formulár na nastavevyjadritsa
 										{
 											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
 											echo "<input type='number' id='body".$row2['id_timu']."' name='body'>";
@@ -366,11 +366,11 @@
 										}
 										else if($odsuhlaseneBodyAdminom == "true")
 										{
-											echo "Rozdelenie bodov bolo odsúhlasené.<br>";
+											echo "Rozdelevyjadritsa bodov bolo odsúhlasené.<br>";
 										}
 										else if($odsuhlaseneBodyAdminom == "false")
 										{
-											echo "Rozdelenie bodov bolo zamietnuté.<br>";
+											echo "Rozdelevyjadritsa bodov bolo zamietnuté.<br>";
 										}
 									} else {
 										 echo "you have no records";
@@ -383,7 +383,7 @@
 						
 
 							// -------------------------------------- KU GRAFU S TEAMS -----------------------------------
-							$pocetTimov = 0; $ano=0; $nie=0; $nevie = 0;
+							$pocetTimov = 0; $uzavrete=0; $vyjadritsa=0; $studNevyj = 0;
 							$sql4 = "SELECT COUNT(*) as pocet FROM team where predmet='" . $predmet ."'";
 							$result4 = mysqli_query($conn, $sql4);  
 							if (mysqli_num_rows($result4) > 0) {
@@ -391,34 +391,118 @@
 								$pocetTimov = $row['pocet'];
 							}
 
-							$sql4 = "SELECT Count(*) as pocet FROM team WHERE odsuhlasene='Nevyjadril' and predmet='" . $predmet ."'";
+							// uzavrety tim
+							$sql4 = "SELECT Count(*) as pocet FROM team WHERE (odsuhlasene='Áno' OR odsuhlasene='Nie') AND predmet='" . $predmet ."'";
 							$result4 = mysqli_query($conn, $sql4);  
 							if (mysqli_num_rows($result4) > 0) {
 								$row = mysqli_fetch_assoc($result4);
-								$nevie = $row['pocet'];
+								$uzavrete = $row['pocet'];
 							}
 
-							$sql4 = "SELECT Count(*) as pocet FROM team WHERE odsuhlasene='Áno' and predmet='" . $predmet ."'";
+							// treba sa vyjadrit
+							// SELECT id_timu FROM team WHERE odsuhlasene='Nevyjadril' AND predmet='Webtech'
+							// SELECT odsuhlasenie FROM student WHERE tim=22
+							$timyID = array();
+							$sql4 = "SELECT id_timu FROM team WHERE odsuhlasene='Nevyjadril' AND predmet='" . $predmet ."'";
 							$result4 = mysqli_query($conn, $sql4);  
 							if (mysqli_num_rows($result4) > 0) {
-								$row = mysqli_fetch_assoc($result4);
-								$ano = $row['pocet'];
+								
+								while($row = mysqli_fetch_assoc($result4)) {
+									array_push($timyID, $row["id_timu"]);
+								}								
 							}
 
-							$sql4 = "SELECT Count(*) as pocet FROM team WHERE odsuhlasene='Nie' and predmet='" . $predmet ."'";
-							$result4 = mysqli_query($conn, $sql4);  
-							if (mysqli_num_rows($result4) > 0) {
-								$row = mysqli_fetch_assoc($result4);
-								$nie = $row['pocet'];
+							 print_r($timyID);
+
+							
+							foreach($timyID as $val) {
+								$studentiVyjadrenie = array();
+								$sql4 = " SELECT odsuhlasenie FROM student WHERE tim=$val";
+								$result4 = mysqli_query($conn, $sql4);   
+								if (mysqli_num_rows($result4) > 0) {
+									while($row = mysqli_fetch_assoc($result4)) {
+										array_push($studentiVyjadrenie, $row["odsuhlasenie"]);
+									}	
+								}
+								if(in_array("Nevyjadril", $studentiVyjadrenie)) $studNevyj++;
+								else $vyjadritsa++;
 							}
 
-							echo "pocet timov".$pocetTimov." ".$ano." ".$nie." ".$nevie;
+							echo "pocet timov ".$pocetTimov." ".$uzavrete." ".$vyjadritsa." ".$studNevyj;
+
+							echo "<table>
+											<thead><tr><th>Pocet timov</th>
+													  <th>Pocet uzavretych timov</th>
+													  <th>Pocet timov ku ktorym sa treba vyjadrit</th>
+													  <th>Počet timov s nevyjadrenymi studentami</th>
+											</tr></thead>
+								<tbody>
+											<tr><td>$pocetTimov</td>
+											<td>$uzavrete</td>
+											<td>$vyjadritsa</td>
+											<td>$studNevyj</td></tr>
+								</tbody></table>";
+
 
 							$dataPoints = array( 
-								array("label"=>"súhlasili", "y"=>($ano/$pocetTimov)),
-								array("label"=>"nesúhlasili", "y"=>($nie/$pocetTimov)),
-								array("label"=>"nevyjadrili sa", "y"=>($nevie/$pocetTimov))
+								array("label"=>"uzavrete", "y"=>($uzavrete/$pocetTimov)),
+								array("label"=>"treba vyjadrit", "y"=>($vyjadritsa/$pocetTimov)),
+								array("label"=>"nevyjadrili sa studenti", "y"=>($studNevyj/$pocetTimov))
 							);
+
+							// --------------------------------------------- KU GRAFU STUDENTI -------------------------------------
+							$pocetStudentov = 0; $anoStud = 0; $nieStud = 0; $nevieStud = 0;
+							$timyID2 = array();
+							$sql5 = "SELECT id_timu FROM team WHERE predmet='".$predmet."'";
+							$result5 = mysqli_query($conn, $sql5);  
+							if (mysqli_num_rows($result5) > 0) {
+									while($row = mysqli_fetch_assoc($result5)) {
+									array_push($timyID2, $row["id_timu"]);								
+								}
+							}
+
+							print_r($timyID2);
+
+							foreach($timyID2 as $val) {
+								$sql4 = " SELECT * FROM student WHERE tim=$val";
+								$result4 = mysqli_query($conn, $sql4);   
+								if (mysqli_num_rows($result4) > 0) {
+									while($row = mysqli_fetch_assoc($result4)) {
+										$pocetStudentov++;
+										if($row["odsuhlasenie"] == "Áno") $anoStud++;
+										if($row["odsuhlasenie"] == "Nie") $nieStud++;
+										if($row["odsuhlasenie"] == "Nevyjadril") $nevieStud++;
+									}	
+								}
+							}
+							
+
+
+							echo "<table>
+											<thead><tr><th>Pocet studentov v predmete</th>
+													  <th>Pocet suhlasiacich studentov</th>
+													  <th>Pocet nesuhlasiacich studentov</th>
+													  <th>Počet nevyjadrenych studentov</th>
+											</tr></thead>
+								<tbody>
+											<tr><td>$pocetStudentov</td>
+											<td>$anoStud</td>
+											<td>$nieStud</td>
+											<td>$nevieStud</td></tr>
+								</tbody></table>";
+
+							$dataPoints2 = array( 
+								array("label"=>"uzavrete", "y"=>($anoStud/$pocetStudentov)),
+								array("label"=>"treba vyjadrit", "y"=>($nieStud/$pocetStudentov)),
+								array("label"=>"nevyjadrili sa studenti", "y"=>($nevieStud/$pocetStudentov))
+							);
+
+							// --------------------------------------------- NA EXPORT -------------------------------------------
+							// SELECT student.body, users.name, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais
+							// este chyba rozlisit podla predmetu
+							// vsetky timy webtech
+							// SELECT student.body, users.name, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais WHERE student.tim=23
+
 						}
 					}else /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					if(isset($_SESSION['username']) && $_SESSION['role'] == "student"){
@@ -469,12 +553,12 @@
 						}
 						
 						if (isset($_POST['suhlas'])){
-							$sql = "UPDATE student SET odsuhlasenie=\"Áno\" WHERE id_student=".$ais_id." AND tim=".$_POST['team'];
+							$sql = "UPDATE student SET odsuhlasevyjadritsa=\"Áno\" WHERE id_student=".$ais_id." AND tim=".$_POST['team'];
 							mysqli_query($conn, $sql);
 						}
 						
 						if (isset($_POST['odmietnutie'])){
-							$sql = "UPDATE student SET odsuhlasenie=\"Nie\" WHERE id_student=".$ais_id." AND tim=".$_POST['team'];
+							$sql = "UPDATE student SET odsuhlasevyjadritsa=\"vyjadritsa\" WHERE id_student=".$ais_id." AND tim=".$_POST['team'];
 							mysqli_query($conn, $sql);
 						}
 							
@@ -497,12 +581,12 @@
 									
 									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']."</th></tr>";
 									echo "<tr><th>Tím: ".$rowteam['cislo_timu']."</th><th>Celkové body: ".$rowteam['body']."</th> <th colspan=\"2\">";
-									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Akceptované";
-									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Neakceptované";
+									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelevyjadritsa Akceptované";
+									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelevyjadritsa Neakceptované";
 									echo "</th></tr>";
 									echo "<tr><th>Email</th><th>Meno</th><th>Body</th><th>Súhlas</th></tr>";
 									
-									$sql = "SELECT student.body, student.odsuhlasenie, users.name, users.email, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais WHERE student.tim=".$team['tim'];
+									$sql = "SELECT student.body, student.odsuhlasevyjadritsa, users.name, users.email, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais WHERE student.tim=".$team['tim'];
 									$result= mysqli_query($conn, $sql);
 									$i=0;
 									if (mysqli_num_rows($result) > 0) {
@@ -516,18 +600,18 @@
 												echo $row['body'];
 											echo "</td><td>";
 											
-											if(!is_null($row['body']) and $row['odsuhlasenie']=="Nevyjadril" and $ais_id == 	$row['id_ais'])
+											if(!is_null($row['body']) and $row['odsuhlasevyjadritsa']=="Nevyjadril" and $ais_id == 	$row['id_ais'])
 												echo "<input type='submit' name='suhlas' value='Súhlasím' />
 												<input type='submit' name='odmietnutie' value='Nesúhlasím' />";
 											else{
 												
-												if($row['odsuhlasenie']=="Nie")
+												if($row['odsuhlasevyjadritsa']=="vyjadritsa")
 													echo "Nesúhlasí";
 												
-												if($row['odsuhlasenie']=="Áno")
+												if($row['odsuhlasevyjadritsa']=="Áno")
 													echo "Súhlasí";
 											
-												if($row['odsuhlasenie']=="Nevyjadril")
+												if($row['odsuhlasevyjadritsa']=="Nevyjadril")
 													echo "Nevyjadril";	
 												
 											}
@@ -555,6 +639,10 @@
         </div>
     </main>
     
+    <!-- > /////////////////////////////////////// KOLACOVE GRAFY ///////////////////////////////////////////////////// <-->
+    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+
     <footer class="mt-4 pt-4 border-top">
         <div class="container">
             <div class="row">
@@ -588,10 +676,10 @@
         var chart = new CanvasJS.Chart("chartContainer", {
             animationEnabled: true,
             title: {
-                text: ""
+                text: "Statistika timov"
             },
             subtitles: [{
-                text: ""
+                text: "<?php echo $_GET['predmet'] ?>"
             }],
             data: [{
                 type: "pie",
@@ -601,6 +689,23 @@
             }]
         });
         chart.render();
+
+        var chart2 = new CanvasJS.Chart("chartContainer2", {
+            animationEnabled: true,
+            title: {
+                text: "Statistika studentov"
+            },
+            subtitles: [{
+                text: "<?php echo $_GET['predmet'] ?>"
+            }],
+            data: [{
+                type: "pie",
+                yValueFormatString: "#,##0.00\"%\"",
+                indexLabel: "{label} ({y})",
+                dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
+            }]
+        });
+        chart2.render();
          
         }
     </script>
