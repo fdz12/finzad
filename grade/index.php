@@ -330,7 +330,6 @@
         </div>
     </main>
     
-    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
     
     <footer class="mt-4 pt-4 border-top">
         <div class="container">
