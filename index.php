@@ -37,15 +37,23 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="/finzad">Domov</a>
                         </li>
+                        <?php
+						if(isset($_SESSION['username']))
+                        {?>
                         <li class="nav-item">
                             <a class="nav-link" href="grade">Hodnotenie</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="agreegrade">Súhlas hodnotenia</a>
                         </li>
+                        <?php
+						if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
+                        {?>
                         <li class="nav-item">
                             <a class="nav-link" href="sendlogininfo">Rozposielanie údajov</a>
                         </li>
+                        <?php } ?>
+                        <?php } ?>
                     </ul>
                     <div class="my-2 my-lg-0">
                         <div class="my-2 my-lg-0">
@@ -75,7 +83,9 @@
                 <h1 class="jumbotron-heading">Hodnotenie z predmetu WEBTE2</h1>
                 <p class="lead color-white">Prišiel si si pozrieť známky z predmetu WEBTE2? Na tejto webovej stránke sa dozvieš hodnotenie za jednotlivé časti predmetu a aj finálne hodnotenie.</p>
                 <p>
-                    <a href="{{url('/login')}}" class="btn btn-primary my-2">Prihlásiť sa</a>
+                    <?php if(!isset($_SESSION['username'])) { ?>
+                    <a class="btn btn-light" href="login.php" role="button">Prihlásiť sa</a>
+                    <?php } ?>
                 </p>
             </div>
         </section>
