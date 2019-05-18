@@ -23,7 +23,7 @@
 </head>
 
 <?php
-    include_once 'config.php';
+    include_once '../config.php';
     session_start();
 ?>
 
@@ -31,7 +31,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #013f78;">
             <div class="container">
-                <a class="navbar-brand" href="">
+                <a class="navbar-brand" href="../">
                     <img src="../img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
                     Hodnotenie predmetu
                 </a>
@@ -49,10 +49,14 @@
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link" href="../agreegrade">Súhlas hodnotenia</a>
-                        </li>
+						</li>
+						<?php
+						if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
+						{?>
                         <li class="nav-item">
                             <a class="nav-link" href="../sendlogininfo">Rozposielanie údajov</a>
-                        </li>
+						</li>
+						<?php } ?>
                     </ul>
                     <div class="my-2 my-lg-0">
                         <div class="my-2 my-lg-0">
@@ -78,35 +82,62 @@
 
     <main>
         <div class="container mt-4">
-            <section>
-                <h4>Súhlas hodnotenia</h4>
-            </section>
-			<section>
+			<div class="row">
+				<div class="col">
+					<h4>Súhlas hodnotenia</h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
 				
 				<?php
 					// ak je session urobená a je adminom
 					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
 					{
-						echo "<form enctype='multipart/form-data' action='index.php' method='POST'>
-										<label> Školský rok </label>
-										<select name='year' required>
-											<option value='1819'>2018/2019</option>
-											<option value='1718'>2017/2018</option>
-											<option value='1617'>2016/2017</option>
-											<option value='1516'>2015/2016</option>
-											<option value='1415'>2014/2015</option>
-									 </select> <br>
-										<label> Názov predmetu </label> <input type='text' name='subject' required> <br>
-										<label> Vyberte súbor </label> <input type='file' name='userfile' accept='.csv' required /> <br>
-										<label> Oddeľovač </label> 
-											<input type='radio' name='delim' value='coma' required> čiarka 
-											<input type='radio' name='delim' value='dotcoma' required> bodkočiarka <br>
-										<input type='submit' name='submit' value='Import' /> 
-									</form>
-									<br>
-								</section>
-								<section>";
-						
+						?>	
+					<h5>Import</h5>
+					<form enctype='multipart/form-data' action='index.php' method='POST'>
+						<div class="form-group">
+							<label for="year">Školský rok</label>
+							<select class="form-control" name="year" id="year" required>
+								<option value='2018/2019'>2018/2019</option>
+								<option value='2017/2018'>2017/2018</option>
+								<option value='2016/2017'>2016/2017</option>
+								<option value='2015/2016'>2015/2016</option>
+								<option value='2014/2015'>2014/2015</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="subject">Názov predmetu</label>
+							<input type="text" class="form-control" name="subject" id="subject" placeholder="Názov predmetu" required>
+						</div>
+						<div class="form-group">
+							<label for="userfile">Vyberte súbor</label>
+							<input type="file" class="form-control" name="userfile" id="userfile" required>
+						</div>
+						<label>
+							Oddelovač
+						</label>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="delim" id="coma" value="coma" required>
+							<label class="form-check-label" for="coma">
+								čiarka
+							</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="coma" required>
+							<label class="form-check-label" for="dotcoma">
+								bodkočiarka
+							</label>
+						</div>
+						<input type='submit' name='submit' class="btn btn-primary mt-3" value='Importovať'> 
+					</form>
+				</div>
+			</div>
+			<div class="row my-5">
+				<div class="col">
+					<h5>Zobrazenie hodnotení</h5>
+					<?php
 						
 						function uploadFile($userfile){
 						
@@ -126,16 +157,7 @@
 
 						}
 
-						include "../config.php";
 						
-						$conn = new mysqli($servername, $username, $password, $dbname);
-							if ($conn->connect_error) {
-								die("Connection failed: " . $conn->connect_error);
-							} else{
-								// echo "pripojene k db";
-							}
-							mysqli_set_charset($conn,"utf8");  
-							
 						if (isset($_POST['submit'])){
 							   
 					
@@ -261,16 +283,20 @@
 						if (mysqli_num_rows($resultPredmety) > 0) 
 						{		
 							$existujePredmet = "true";
-							echo "<br><form enctype='multipart/form-data' action='index.php' method='POST'>";
-							echo "<select name='PredmetN' required>";
+							echo "<div class='mb-4'><form enctype='multipart/form-data' action='index.php' method='POST'>";
+							echo "<div class='form-group'><select name='PredmetN' class='form-control' required>";
 							while($rowP = mysqli_fetch_assoc($resultPredmety)) 
 							{
-								echo "<option value=". $rowP['predmet'] .">". $rowP['predmet'] . "</option>";
+								if ($rowP['predmet'] == $_GET['predmet']){
+									echo "<option value=". $rowP['predmet'] ." selected>". $rowP['predmet'] . "</option>";
+								} else {
+									echo "<option value=". $rowP['predmet'] .">". $rowP['predmet'] . "</option>";
+								}
 								$predmet = $rowP['predmet'];
 							}
-							echo "</select>";
-							echo "<input type='submit' name='predmet' value='Zobraz tímy' /> ";
-							echo "</form>";					
+							echo "</select></div>";
+							echo "<input type='submit' name='predmet' value='Zobraz tímy' class='btn btn-primary'> ";
+							echo "</form></div>";					
 						}
 											
 					
@@ -287,8 +313,6 @@
 							$result2 = mysqli_query($conn, $sql2);  
 							if (mysqli_num_rows($result2) > 0) {
 								while($row2 = mysqli_fetch_assoc($result2)) {
-
-									
 									$nastaveneBody = "false";
 									$rozdeleneBody = "true";
 									$odsuhlaseneBody = "true";
@@ -306,7 +330,6 @@
 										$odsuhlaseneBodyAdminom = "false";
 										 
 									
-									
 									if ($nastaveneBody == "true")
 										echo "<h3> Členovia tímu č. ".$row2['cislo_timu']." s " . $body . " bodmi</h3>";
 									else
@@ -315,7 +338,7 @@
 									$sql3 = "select * from student join users on id_student=id_ais WHERE tim=".$row2['id_timu'];
 									$result3 = mysqli_query($conn, $sql3);  
 									if (mysqli_num_rows($result3) > 0) {
-										echo "<table>
+										echo "<div class='overflow-auto'><table class='table'>
 											<thead><tr><th>ID</th>
 													  <th>Meno</th>
 													  <th>Email</th>
@@ -339,7 +362,7 @@
 												 $odsuhlaseneBody = "false";
 										 }
 								
-										 echo "</tbody></table>";
+										 echo "</tbody></table></div>";
 										
 										//echo "<br>$nastaveneBody<br>";
 										if($nastaveneBody == "false") //ak nemá nastavené body tak ukáže formulár na nastavenie
@@ -422,8 +445,6 @@
 								}								
 							}
 
-							 print_r($timyID);
-
 							
 							foreach($timyID as $val) {
 								$studentiVyjadrenie = array();
@@ -438,9 +459,7 @@
 								else $vyjadritsa++;
 							}
 
-							echo "pocet timov ".$pocetTimov." ".$uzavrete." ".$vyjadritsa." ".$studNevyj;
-
-							echo "<table>
+							echo "<div class='my-4 overflow-auto'><table class='table'>
 											<thead><tr><th>Pocet timov</th>
 													  <th>Pocet uzavretych timov</th>
 													  <th>Pocet timov ku ktorym sa treba vyjadrit</th>
@@ -451,7 +470,7 @@
 											<td>$uzavrete</td>
 											<td>$vyjadritsa</td>
 											<td>$studNevyj</td></tr>
-								</tbody></table>";
+								</tbody></table></div>";
 
 
 							$dataPoints = array( 
@@ -471,8 +490,6 @@
 								}
 							}
 
-							print_r($timyID2);
-
 							foreach($timyID2 as $val) {
 								$sql4 = " SELECT * FROM student WHERE tim=$val";
 								$result4 = mysqli_query($conn, $sql4);   
@@ -486,9 +503,7 @@
 								}
 							}
 							
-
-
-							echo "<table>
+							echo "<div class='my-4 overflow-auto'><table class='table'>
 											<thead><tr><th>Pocet studentov v predmete</th>
 													  <th>Pocet suhlasiacich studentov</th>
 													  <th>Pocet nesuhlasiacich studentov</th>
@@ -499,7 +514,7 @@
 											<td>$anoStud</td>
 											<td>$nieStud</td>
 											<td>$nevieStud</td></tr>
-								</tbody></table>";
+								</tbody></table></div>";
 
 							$dataPoints2 = array( 
 								array("label"=>"súhlasiaci študenti", "y"=>($anoStud/$pocetStudentov)),
@@ -584,7 +599,7 @@
 								if (mysqli_num_rows($resultedteam) > 0) {
 									$rowteam = $resultedteam->fetch_assoc();
 									
-									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']."</th></tr>";
+									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table class='table'><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']."</th></tr>";
 									echo "<tr><th>Tím: ".$rowteam['cislo_timu']."</th><th>Celkové body: ".$rowteam['body']."</th> <th colspan=\"2\">";
 									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Akceptované";
 									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Neakceptované";
@@ -598,7 +613,7 @@
 										while($row = $result->fetch_assoc()){
 											echo "<tr><td>".$row['email']."</td><td>".$row['name']."</td><td>";
 											if(is_null($row['body'])){
-												echo "<input name=\"body[".$i."]\" type=\"number\" required>";
+												echo "<div class='form-group mb-0'><input name=\"body[".$i."]\" type=\"number\" class='form-control' placeholder='Počet bodov' required></div>";
 												$i++;
 											}
 											else 
@@ -606,8 +621,8 @@
 											echo "</td><td>";
 											
 											if(!is_null($row['body']) and $row['odsuhlasenie']=="Nevyjadril" and $ais_id == 	$row['id_ais'])
-												echo "<input type='submit' name='suhlas' value='Súhlasím' />
-												<input type='submit' name='odmietnutie' value='Nesúhlasím' />";
+												echo "<input type='submit' name='suhlas' value='Súhlasím' class='btn btn-success'>
+												<input type='submit' name='odmietnutie' value='Nesúhlasím' class='btn btn-danger'>";
 											else{
 												
 												if($row['odsuhlasenie']=="Nie")
@@ -622,11 +637,16 @@
 											}
 																							
 											echo "</td></tr>";
+											if($row['body']===NULL){
+												$rozdel = 0;
+											}
+											else
+												$rozdel = 1;
 										}
 									}
-									if(is_null($row['body'])){
+									if($rozdel == 0){
 										echo "<input type=\"hidden\" name=\"team\" value=\"".$team['tim']."\">";
-										echo "<tr><td colspan=\"4\"><input type='submit' name='submit' value='Rozdeliť body' /></td></tr>";
+										echo "<tr><td colspan=\"4\"><input type='submit' name='submit' value='Rozdeliť body' class='btn btn-primary'></td></tr>";
 									}
 									echo "</table></form>";
 								}
@@ -638,17 +658,81 @@
 					}
 				
 				
+					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
+					{?>
+						<!-- > /////////////////////////////////////// KOLACOVE GRAFY ///////////////////////////////////////////////////// <-->
+					<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+					<div id="chartContainer2" style="height: 370px; width: 100%;"></div>
 					
-				?>
-			</section>
+					<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+					<script>
+						// --------------------------------------- export --------------------------------
+						function exportData(tim){
+								/* var xhttp = new XMLHttpRequest();
+							xhttp.onreadystatechange = function() {
+								if (this.readyState == 4 && this.status == 200) {
+								alert( this.responseText );
+								}
+							};
+							xhttp.open("GET", "export.php", true);
+							xhttp.send();*/
+
+								var url = 'export.php?';
+									var query = 'tim=' + tim;
+
+									window.location.href = url + query;
+						}
+
+						// https://canvasjs.com/php-charts/pie-chart/
+						window.onload = function() {
+								
+						var chart = new CanvasJS.Chart("chartContainer", {
+							animationEnabled: true,
+							title: {
+								text: "Štatistika timov"
+							},
+							subtitles: [{
+								text: "<?php echo $_GET['predmet'] ?>"
+							}],
+							data: [{
+								type: "pie",
+								yValueFormatString: "#,##0.00\"%\"",
+								indexLabel: "{label} ({y})",
+								dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+							}]
+						});
+						chart.render();
+
+						var chart2 = new CanvasJS.Chart("chartContainer2", {
+							animationEnabled: true,
+							title: {
+								text: "Statistika studentov"
+							},
+							subtitles: [{
+								text: "<?php echo $_GET['predmet'] ?>"
+							}],
+							data: [{
+								type: "pie",
+								yValueFormatString: "#,##0.00\"%\"",
+								indexLabel: "{label} ({y})",
+								dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
+							}]
+						});
+						chart2.render();
+						
+						}
+					</script>
+
+   
+	
+	 
+			<?php } ?>
+				</div>
+			</div>
         </div>
     </main>
-    
-    <!-- > /////////////////////////////////////// KOLACOVE GRAFY ///////////////////////////////////////////////////// <-->
-    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-    <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
-
-    <footer class="mt-4 pt-4 border-top">
+	
+	<footer class="mt-4 pt-4 border-top">
         <div class="container">
             <div class="row">
                 <div class="col-12 col-md">
@@ -672,66 +756,6 @@
             </div>
         </div>
     </footer>
-	
-	 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-     <script>
-        // --------------------------------------- export --------------------------------
-        function exportData(tim){
-        	  	/* var xhttp = new XMLHttpRequest();
-			  xhttp.onreadystatechange = function() {
-			    if (this.readyState == 4 && this.status == 200) {
-			     alert( this.responseText );
-			    }
-			  };
-			  xhttp.open("GET", "export.php", true);
-			  xhttp.send();*/
-
-			      var url = 'export.php?';
-				    var query = 'tim=' + tim;
-
-				    window.location.href = url + query;
-        }
-
-        // https://canvasjs.com/php-charts/pie-chart/
-        window.onload = function() {
-                 
-        var chart = new CanvasJS.Chart("chartContainer", {
-            animationEnabled: true,
-            title: {
-                text: "Statistika timov"
-            },
-            subtitles: [{
-                text: "<?php echo $_GET['predmet'] ?>"
-            }],
-            data: [{
-                type: "pie",
-                yValueFormatString: "#,##0.00\"%\"",
-                indexLabel: "{label} ({y})",
-                dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-            }]
-        });
-        chart.render();
-
-        var chart2 = new CanvasJS.Chart("chartContainer2", {
-            animationEnabled: true,
-            title: {
-                text: "Statistika studentov"
-            },
-            subtitles: [{
-                text: "<?php echo $_GET['predmet'] ?>"
-            }],
-            data: [{
-                type: "pie",
-                yValueFormatString: "#,##0.00\"%\"",
-                indexLabel: "{label} ({y})",
-                dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
-            }]
-        });
-        chart2.render();
-         
-        }
-
-    </script>
 	
 </body>
 
