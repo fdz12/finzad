@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 15, 2019 at 06:21 PM
+-- Generation Time: May 18, 2019 at 08:24 PM
 -- Server version: 5.7.25-0ubuntu0.18.04.2
 -- PHP Version: 7.2.15-0ubuntu0.18.04.1
 
@@ -29,11 +29,11 @@ SET time_zone = "+00:00";
 CREATE TABLE `grade` (
   `id` int(11) NOT NULL,
   `id_student` int(11) NOT NULL,
-  `meno` varchar(255) NOT NULL,
-  `predmet` varchar(100) NOT NULL,
-  `rok` varchar(20) NOT NULL,
-  `hlavicka` varchar(512) NOT NULL,
-  `hodnoty` varchar(512) NOT NULL
+  `meno` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `predmet` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `rok` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hlavicka` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hodnoty` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -41,14 +41,18 @@ CREATE TABLE `grade` (
 --
 
 INSERT INTO `grade` (`id`, `id_student`, `meno`, `predmet`, `rok`, `hlavicka`, `hodnoty`) VALUES
-(32, 12345, 'Priezvisko1 Meno1', 'Webtech', '2018/2019', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!3!4!3!3!2!2!!2!1,25!6!6!8!14,9!16!73,77!D'),
-(33, 24598, 'Priezvisko2 Meno2', 'Webtech', '2018/2019', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!4!3!3!2!2!2!3!2!2!10!7!8!20!14!85,05!B'),
-(34, 54187, 'Priezvisko3 Meno3', 'Webtech', '2018/2019', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!3!4!3!3!2!2!2!2!1,5!10!7!7!14,5!24!88,28!B'),
-(35, 23581, 'Priezvisko4 Meno4', 'Webtech', '2018/2019', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!3!3!4!3!3!2!2!3!2!2!9!10!8!20!30!107!A'),
-(40, 12345, 'Priezvisko1 Meno1', 'Matematika', '2018/2019', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!3!4!3!3!2!2!!2!1,25!6!6!8!14,9!16!73,77!D'),
-(41, 24598, 'Priezvisko2 Meno2', 'Matematika', '2018/2019', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!4!3!3!2!2!2!3!2!2!10!7!8!20!14!85,05!B'),
-(42, 54187, 'Priezvisko3 Meno3', 'Matematika', '2018/2019', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!3!4!3!3!2!2!2!2!1,5!10!7!7!14,5!24!88,28!B'),
-(43, 23581, 'Priezvisko4 Meno4', 'Matematika', '2018/2019', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!3!3!4!3!3!2!2!3!2!2!9!10!8!20!30!107!A');
+(1, 12345, 'Priezvisko1 Meno1', 'Webtechy', '2016/2017', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!3!4!3!3!2!2!!2!1,25!6!6!8!14,9!16!73,77!D'),
+(2, 24598, 'Priezvisko2 Meno2', 'Webtechy', '2016/2017', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!4!3!3!2!2!2!3!2!2!10!7!8!20!14!85,05!B'),
+(3, 54187, 'Priezvisko3 Meno3', 'Webtechy', '2016/2017', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!3!4!3!3!2!2!2!2!1,5!10!7!7!14,5!24!88,28!B'),
+(4, 23581, 'Priezvisko4 Meno4', 'Webtechy', '2016/2017', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!3!3!4!3!3!2!2!3!2!2!9!10!8!20!30!107!A'),
+(5, 12345, 'Priezvisko1 Meno1', 'Matematika', '2017/2018', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!3!4!3!3!2!2!!2!1,25!6!6!8!14,9!16!73,77!D'),
+(6, 24598, 'Priezvisko2 Meno2', 'Matematika', '2017/2018', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!4!3!3!2!2!2!3!2!2!10!7!8!20!14!85,05!B'),
+(7, 54187, 'Priezvisko3 Meno3', 'Matematika', '2017/2018', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!2!3!4!3!3!2!2!2!2!1,5!10!7!7!14,5!24!88,28!B'),
+(8, 23581, 'Priezvisko4 Meno4', 'Matematika', '2017/2018', 'ID!Meno!cv1!cv2!cv3!cv4!cv5!cv6!cv7!cv8!cv9!cv10!cv11!Z1!Z2!VT!SK-T!SK-P!Spolu!Známka', '3!3!3!4!3!3!2!2!3!2!2!9!10!8!20!30!107!A'),
+(10, 12345, 'Priezvisko1 Meno1', 'Mikropocitace', '2016/2017', 'ID!Meno!Zápočet!Projekt!Test!Dotazník!Bonus!Súčet!Známka', '31!2!3!1!1!93!A'),
+(11, 24598, 'Priezvisko2 Meno2', 'Mikropocitace', '2016/2017', 'ID!Meno!Zápočet!Projekt!Test!Dotazník!Bonus!Súčet!Známka', '3!42!4!0!5!82!B'),
+(12, 54187, 'Priezvisko3 Meno3', 'Mikropocitace', '2016/2017', 'ID!Meno!Zápočet!Projekt!Test!Dotazník!Bonus!Súčet!Známka', '3!5!35!1!3!73!C'),
+(13, 23581, 'Priezvisko4 Meno4', 'Mikropocitace', '2016/2017', 'ID!Meno!Zápočet!Projekt!Test!Dotazník!Bonus!Súčet!Známka', '3!23!3!0!8!63!D');
 
 -- --------------------------------------------------------
 
@@ -86,7 +90,8 @@ INSERT INTO `history_login` (`id`, `id_user`, `datetime_login`) VALUES
 (17, 80, '2019-05-15 14:29:58'),
 (18, 80, '2019-05-15 16:11:56'),
 (19, 10, '2019-05-15 17:20:26'),
-(20, 80, '2019-05-15 17:20:58');
+(20, 80, '2019-05-15 17:20:58'),
+(21, 10, '2019-05-18 19:36:55');
 
 -- --------------------------------------------------------
 
@@ -219,6 +224,12 @@ INSERT INTO `users` (`id`, `id_ais`, `login`, `name`, `email`, `password`, `type
 --
 
 --
+-- Indexes for table `grade`
+--
+ALTER TABLE `grade`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `history_login`
 --
 ALTER TABLE `history_login`
@@ -264,10 +275,15 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `grade`
+--
+ALTER TABLE `grade`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+--
 -- AUTO_INCREMENT for table `history_login`
 --
 ALTER TABLE `history_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT for table `migrations`
 --
