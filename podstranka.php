@@ -80,8 +80,8 @@
     <main>
         <div class="container mt-4">
             <div class="row">
-                <div class="col">
-                    <table>
+                <div class="col overflow-auto">
+                    <table class="table">
 						<thead>
 							<tr>
 								<th></th>
@@ -89,7 +89,7 @@
 							</tr>
 							<tr>
 								<th></th>
-								<th>Dizajn webstránky, základné trasovania, controllery, prihlasovanie a registrácia používateľov</th>
+								<th>Dizajn webstránky, základné trasovania, prihlasovanie a registrácia používateľov</th>
 								<th>Úloha 1</th>
 								<th>Úloha 2 - 1.časť</th>
 								<th>Úloha 2 - 2.časť</th>
