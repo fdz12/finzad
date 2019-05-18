@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Súhlas hodnotenia | Hodnotevyjadritsa predmetu</title>
+    <title>Súhlas hodnotenia | Hodnotenie predmetu</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui.min.css" />
@@ -33,7 +33,7 @@
             <div class="container">
                 <a class="navbar-brand" href="">
                     <img src="../img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                    Hodnotevyjadritsa predmetu
+                    Hodnotenie predmetu
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -45,13 +45,13 @@
                             <a class="nav-link" href="../">Domov</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../grade">Hodnotevyjadritsa</a>
+                            <a class="nav-link" href="../grade">Hodnotenie </a>
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link" href="../agreegrade">Súhlas hodnotenia</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../sendlogininfo">Rozposielavyjadritsa údajov</a>
+                            <a class="nav-link" href="../sendlogininfo">Rozposielanie údajov</a>
                         </li>
                     </ul>
                     <div class="my-2 my-lg-0">
@@ -161,7 +161,7 @@
 
 							// subor musi byt na servri
 							// https://stackoverflow.com/questions/2805427/how-to-extract-data-from-csv-file-in-php
-							// CITAvyjadritsa S CSV    
+							// CITANIE S CSV    
 							if (($handle = fopen($filename, "r")) !== FALSE) {
 								//echo "<br>otvoril subor<br>";
 								$idPridanehoTimu = array();
@@ -249,11 +249,11 @@
 						
 						if(isset($_POST['nesuhlas'])) //ak bol stlačený nesúhlas tak resetuje body i súhlasy
 						{
-							$sqlNastavSuhlas = "UPDATE team SET odsuhlasene='vyjadritsa' WHERE id_timu='$_POST[idTimu]'";
+							$sqlNastavSuhlas = "UPDATE team SET odsuhlasene='Nie' WHERE id_timu='$_POST[idTimu]'";
 							mysqli_query($conn, $sqlNastavSuhlas);
 						}
 						
-						//Ak existujú záznamy pre nejaký predmet ukáž tlačidlo na ich zobrazevyjadritsa.
+						//Ak existujú záznamy pre nejaký predmet ukáž tlačidlo na ich zobrazenie.
 						$predmet = "";
 						$existujePredmet = "false";
 						$sqlPredmety = "Select distinct predmet from team";
@@ -276,7 +276,7 @@
 					
 						if (isset($_GET['predmet']))
 						{
-							// VYPISAvyjadritsa DO TABULIEK	
+							// VYPISANIE DO TABULIEK	
 							$predmet = $_GET['predmet'];
 						}
 						
@@ -302,7 +302,7 @@
 									if($row2['odsuhlasene'] == "Áno")
 										$odsuhlaseneBodyAdminom = "true";								 
 										 
-									if($row2['odsuhlasene'] == "vyjadritsa")
+									if($row2['odsuhlasene'] == "Nie")
 										$odsuhlaseneBodyAdminom = "false";
 										 
 									
@@ -334,15 +334,15 @@
 												 echo "<td></td>";
 												 $rozdeleneBody = "false";
 											 }
-											 echo "<td> " . $row['odsuhlasevyjadritsa'] . "</td></tr>";
-											 if ($row['odsuhlasevyjadritsa'] != "Áno")
+											 echo "<td> " . $row['odsuhlasenie'] . "</td></tr>";
+											 if ($row['odsuhlasenie'] != "Áno")
 												 $odsuhlaseneBody = "false";
 										 }
 								
 										 echo "</tbody></table>";
 										
 										//echo "<br>$nastaveneBody<br>";
-										if($nastaveneBody == "false") //ak nemá nastavené body tak ukáže formulár na nastavevyjadritsa
+										if($nastaveneBody == "false") //ak nemá nastavené body tak ukáže formulár na nastavenie
 										{
 											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
 											echo "<input type='number' id='body".$row2['id_timu']."' name='body'>";
@@ -366,11 +366,21 @@
 										}
 										else if($odsuhlaseneBodyAdminom == "true")
 										{
-											echo "Rozdelevyjadritsa bodov bolo odsúhlasené.<br>";
+											echo "Rozdelenie bodov bolo odsúhlasené.<br>";
+											// ked su rozdelene aj odsulasene body mozme ich exportovat
+											//echo $row2['id_timu'];
+											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."&tim=".$row2['id_timu']."' method='POST'>";
+											echo "<input type='submit' name='export' value='Export'>";
+											echo "</form>";
+
 										}
 										else if($odsuhlaseneBodyAdminom == "false")
 										{
-											echo "Rozdelevyjadritsa bodov bolo zamietnuté.<br>";
+											echo "Rozdelenie bodov bolo zamietnuté.<br>";
+											// ked su rozdelene aj odsulasene body mozme ich exportovat
+											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."&tim=".$row2['id_timu']."' method='POST'>";
+											echo "<input type='submit' name='export' value='Export'>";
+											echo "</form>";
 										}
 									} else {
 										 echo "you have no records";
@@ -492,9 +502,9 @@
 								</tbody></table>";
 
 							$dataPoints2 = array( 
-								array("label"=>"uzavrete", "y"=>($anoStud/$pocetStudentov)),
-								array("label"=>"treba vyjadrit", "y"=>($nieStud/$pocetStudentov)),
-								array("label"=>"nevyjadrili sa studenti", "y"=>($nevieStud/$pocetStudentov))
+								array("label"=>"súhlasiaci študenti", "y"=>($anoStud/$pocetStudentov)),
+								array("label"=>"nesúhlasiaci študenti", "y"=>($nieStud/$pocetStudentov)),
+								array("label"=>"nevyjadrení študenti", "y"=>($nevieStud/$pocetStudentov))
 							);
 
 							// --------------------------------------------- NA EXPORT -------------------------------------------
@@ -502,6 +512,10 @@
 							// este chyba rozlisit podla predmetu
 							// vsetky timy webtech
 							// SELECT student.body, users.name, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais WHERE student.tim=23
+							if(isset($_POST['export'])) 
+							{
+								echo "EXPORTUJE SUBOR ".$_GET['tim'];
+							}
 
 						}
 					}else /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -553,12 +567,12 @@
 						}
 						
 						if (isset($_POST['suhlas'])){
-							$sql = "UPDATE student SET odsuhlasevyjadritsa=\"Áno\" WHERE id_student=".$ais_id." AND tim=".$_POST['team'];
+							$sql = "UPDATE student SET odsuhlasenie=\"Áno\" WHERE id_student=".$ais_id." AND tim=".$_POST['team'];
 							mysqli_query($conn, $sql);
 						}
 						
 						if (isset($_POST['odmietnutie'])){
-							$sql = "UPDATE student SET odsuhlasevyjadritsa=\"vyjadritsa\" WHERE id_student=".$ais_id." AND tim=".$_POST['team'];
+							$sql = "UPDATE student SET odsuhlasenie=\"Nie\" WHERE id_student=".$ais_id." AND tim=".$_POST['team'];
 							mysqli_query($conn, $sql);
 						}
 							
@@ -581,12 +595,12 @@
 									
 									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']."</th></tr>";
 									echo "<tr><th>Tím: ".$rowteam['cislo_timu']."</th><th>Celkové body: ".$rowteam['body']."</th> <th colspan=\"2\">";
-									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelevyjadritsa Akceptované";
-									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelevyjadritsa Neakceptované";
+									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Akceptované";
+									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Neakceptované";
 									echo "</th></tr>";
 									echo "<tr><th>Email</th><th>Meno</th><th>Body</th><th>Súhlas</th></tr>";
 									
-									$sql = "SELECT student.body, student.odsuhlasevyjadritsa, users.name, users.email, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais WHERE student.tim=".$team['tim'];
+									$sql = "SELECT student.body, student.odsuhlasenie, users.name, users.email, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais WHERE student.tim=".$team['tim'];
 									$result= mysqli_query($conn, $sql);
 									$i=0;
 									if (mysqli_num_rows($result) > 0) {
@@ -600,18 +614,18 @@
 												echo $row['body'];
 											echo "</td><td>";
 											
-											if(!is_null($row['body']) and $row['odsuhlasevyjadritsa']=="Nevyjadril" and $ais_id == 	$row['id_ais'])
+											if(!is_null($row['body']) and $row['odsuhlasenie']=="Nevyjadril" and $ais_id == 	$row['id_ais'])
 												echo "<input type='submit' name='suhlas' value='Súhlasím' />
 												<input type='submit' name='odmietnutie' value='Nesúhlasím' />";
 											else{
 												
-												if($row['odsuhlasevyjadritsa']=="vyjadritsa")
+												if($row['odsuhlasenie']=="Nie")
 													echo "Nesúhlasí";
 												
-												if($row['odsuhlasevyjadritsa']=="Áno")
+												if($row['odsuhlasenie']=="Áno")
 													echo "Súhlasí";
 											
-												if($row['odsuhlasevyjadritsa']=="Nevyjadril")
+												if($row['odsuhlasenie']=="Nevyjadril")
 													echo "Nevyjadril";	
 												
 											}
