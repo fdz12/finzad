@@ -637,9 +637,14 @@
 											}
 																							
 											echo "</td></tr>";
+											if($row['body']===NULL){
+												$rozdel = 0;
+											}
+											else
+												$rozdel = 1;
 										}
 									}
-									if(is_null($row['body'])){
+									if($rozdel == 0){
 										echo "<input type=\"hidden\" name=\"team\" value=\"".$team['tim']."\">";
 										echo "<tr><td colspan=\"4\"><input type='submit' name='submit' value='Rozdeliť body' class='btn btn-primary'></td></tr>";
 									}

@@ -81,7 +81,70 @@
         <div class="container mt-4">
             <div class="row">
                 <div class="col">
-                    Tu tabuľka
+                    <table>
+						<thead>
+							<tr>
+								<th></th>
+								<th colspan=6>Úlohy</th>
+							</tr>
+							<tr>
+								<th></th>
+								<th>Dizajn webstránky, základné trasovania, controllery, prihlasovanie a registrácia používateľov</th>
+								<th>Úloha 1</th>
+								<th>Úloha 2 - 1.časť</th>
+								<th>Úloha 2 - 2.časť</th>
+								<th>Úloha 3</th>
+								<th>Kompletizácia zadania</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th>Anna Skachová</th>
+								<td></td>
+								<td><img src="checked.png" alt="Spravené"></td>
+								<td></td>
+								<td><img src="checked.png" alt="Spravené"></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<th>Dominik Raslavský</th>
+								<td></td>
+								<td><img src="checked.png" alt="Spravené"></td>
+								<td></td>
+								<td><img src="checked.png" alt="Spravené"></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<th>Denis Žuffa</th>
+								<td><img src="checked.png" alt="Spravené"></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td><img src="checked.png" alt="Spravené"></td>
+							</tr>
+							<tr>
+								<th>Zdenek Pichlík</th>
+								<td></td>
+								<td></td>
+								<td><img src="checked.png" alt="Spravené"></td>
+								<td></td>
+								<td><img src="checked.png" alt="Spravené"></td>
+								<td></td>
+							</tr>
+							<tr>
+								<th>Balázs Bence Bertalan</th>
+								<td></td>
+								<td></td>
+								<td><img src="checked.png" alt="Spravené"></td>
+								<td></td>
+								<td><img src="checked.png" alt="Spravené"></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
                 </div>
             </div>
         </div>
