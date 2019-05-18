@@ -543,7 +543,7 @@
 								echo "<p style=\"color:red\">Ešte nemáte zadelené body!</p>";
 							else{
 								if($sucet !=$row['body'])
-								echo "<p style=\"color:red\">Súčet individualnich bodov sa musí rovnať bodom tímu!</p>";
+								echo "<p style=\"color:red\">Súčet individuálnych bodov sa musí rovnať bodom tímu!</p>";
 								else{
 									$sql = "SELECT id_student FROM student WHERE tim=".$_POST['team'];
 									$result = mysqli_query($conn, $sql);

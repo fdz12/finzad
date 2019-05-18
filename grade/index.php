@@ -239,8 +239,15 @@
 							
 							if (isset($_GET['zobraz']))
 							{
+								// vymaz vsetko zo suboru
+								//open file to write
+								$fp = fopen("content.txt", "w+");
+								// clear content to 0 bits
+								ftruncate($fp, 0);
+
 								//echo "<br> Predmet i rok boli zvolene<br>";
 								$hlavicka = "";
+								$line = "";
 								$hodnoty = explode("!", $_GET['PredmetN']);
 								echo "<h3>" . $hodnoty[0] . " z roku " . $hodnoty[1] . "</h3>";
 								$sqlZobraz = "Select * from grade where predmet = '". $hodnoty[0] ."' and rok = '". $hodnoty[1] ."'";
@@ -265,26 +272,39 @@
 											echo "</tr></thead><tbody>";										
 											$pole = explode('!', $rowZobraz['hodnoty']);
 											
+											// HODNOTY V BODY
+											// zapis  do suboru
+											$line .= $rowZobraz['id_student'].";".$rowZobraz['meno'];
+																			
 											echo "<tr>";
 											echo "<td> " . $rowZobraz['id_student'] . "</td>";
 											echo "<td> " . $rowZobraz['meno'] . "</td>";
 											foreach ($pole as $hodnota) {
 												echo "<td>" . $hodnota . "</td>";
+												$line .= ";".$hodnota;
 											}
-											echo "</tr>";										
+											echo "</tr>";
+											
+											$line .= "\n";										
 										}
 										else
 										{
 																					
 											$pole = explode('!', $rowZobraz['hodnoty']);
 											
+											// HODNOTY V BODY
+											// zapis  do suboru
+											$line .= $rowZobraz['id_student'].";".$rowZobraz['meno'];
+
 											echo "<tr>";
 											echo "<td> " . $rowZobraz['id_student'] . "</td>";
 											echo "<td> " . $rowZobraz['meno'] . "</td>";
 											foreach ($pole as $hodnota) {
 												echo "<td>" . $hodnota . "</td>";
+												$line .= ";".$hodnota;
 											}
-											echo "</tr>";			
+											echo "</tr>";	
+											$line .= "\n";			
 										}
 									}
 									echo "</tbody></table></div>";
@@ -293,8 +313,13 @@
 										<input type='hidden' name='predmet' value='". $hodnoty[0] ."'>
 										<input type='hidden' name='rok' value='". $hodnoty[1] ."'>
 										<input type='submit' name='zmaz' value='Zmaž hodnotenia' class='btn btn-danger'>
+										<input type='button' name='printPDF' value='Tlač do PDF' class='btn' onclick=\"window.location.href='table.php'\">
 										</form>";
 								}
+								// zapis do suboru
+								file_put_contents("content.txt",$line);	
+								//close file
+								fclose($fp);
 							}
 							
 							
