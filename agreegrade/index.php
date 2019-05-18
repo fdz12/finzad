@@ -369,18 +369,18 @@
 											echo "Rozdelenie bodov bolo odsúhlasené.<br>";
 											// ked su rozdelene aj odsulasene body mozme ich exportovat
 											//echo $row2['id_timu'];
-											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."&tim=".$row2['id_timu']."' method='POST'>";
-											echo "<input type='submit' name='export' value='Export'>";
-											echo "</form>";
+											//echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."&tim=".$row2['id_timu']."' method='POST'>";
+											echo "<input type='button' name='export' value='Export' onclick='exportData(".$row2['id_timu'].")'>";
+											//echo "</form>";
 
 										}
 										else if($odsuhlaseneBodyAdminom == "false")
 										{
 											echo "Rozdelenie bodov bolo zamietnuté.<br>";
 											// ked su rozdelene aj odsulasene body mozme ich exportovat
-											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."&tim=".$row2['id_timu']."' method='POST'>";
-											echo "<input type='submit' name='export' value='Export'>";
-											echo "</form>";
+											//echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."&tim=".$row2['id_timu']."' method='POST'>";
+											echo "<input type='button' name='export' value='Export' onclick='exportData(".$row2['id_timu'].")'>";
+											// echo "</form>";
 										}
 									} else {
 										 echo "you have no records";
@@ -507,16 +507,7 @@
 								array("label"=>"nevyjadrení študenti", "y"=>($nevieStud/$pocetStudentov))
 							);
 
-							// --------------------------------------------- NA EXPORT -------------------------------------------
-							// SELECT student.body, users.name, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais
-							// este chyba rozlisit podla predmetu
-							// vsetky timy webtech
-							// SELECT student.body, users.name, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais WHERE student.tim=23
-							if(isset($_POST['export'])) 
-							{
-								echo "EXPORTUJE SUBOR ".$_GET['tim'];
-							}
-
+							
 						}
 					}else /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 					if(isset($_SESSION['username']) && $_SESSION['role'] == "student"){
@@ -684,6 +675,23 @@
 	
 	 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
      <script>
+        // --------------------------------------- export --------------------------------
+        function exportData(tim){
+        	  	/* var xhttp = new XMLHttpRequest();
+			  xhttp.onreadystatechange = function() {
+			    if (this.readyState == 4 && this.status == 200) {
+			     alert( this.responseText );
+			    }
+			  };
+			  xhttp.open("GET", "export.php", true);
+			  xhttp.send();*/
+
+			      var url = 'export.php?';
+				    var query = 'tim=' + tim;
+
+				    window.location.href = url + query;
+        }
+
         // https://canvasjs.com/php-charts/pie-chart/
         window.onload = function() {
                  
@@ -722,6 +730,7 @@
         chart2.render();
          
         }
+
     </script>
 	
 </body>
