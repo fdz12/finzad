@@ -31,7 +31,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #013f78;">
             <div class="container">
-                <a class="navbar-brand" href="">
+                <a class="navbar-brand" href="../">
                     <img src="../img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
                     Hodnotenie predmetu
                 </a>
@@ -49,10 +49,14 @@
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link" href="../agreegrade">Súhlas hodnotenia</a>
-                        </li>
+						</li>
+						<?php
+						if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
+						{?>
                         <li class="nav-item">
                             <a class="nav-link" href="../sendlogininfo">Rozposielanie údajov</a>
-                        </li>
+						</li>
+						<?php } ?>
                     </ul>
                     <div class="my-2 my-lg-0">
                         <div class="my-2 my-lg-0">
@@ -584,7 +588,7 @@
 								if (mysqli_num_rows($resultedteam) > 0) {
 									$rowteam = $resultedteam->fetch_assoc();
 									
-									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']."</th></tr>";
+									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table class='table'><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']."</th></tr>";
 									echo "<tr><th>Tím: ".$rowteam['cislo_timu']."</th><th>Celkové body: ".$rowteam['body']."</th> <th colspan=\"2\">";
 									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Akceptované";
 									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Neakceptované";
@@ -598,7 +602,7 @@
 										while($row = $result->fetch_assoc()){
 											echo "<tr><td>".$row['email']."</td><td>".$row['name']."</td><td>";
 											if(is_null($row['body'])){
-												echo "<input name=\"body[".$i."]\" type=\"number\" required>";
+												echo "<div class='form-group mb-0'><input name=\"body[".$i."]\" type=\"number\" class='form-control' placeholder='Počet bodov' required></div>";
 												$i++;
 											}
 											else 
@@ -606,8 +610,8 @@
 											echo "</td><td>";
 											
 											if(!is_null($row['body']) and $row['odsuhlasenie']=="Nevyjadril" and $ais_id == 	$row['id_ais'])
-												echo "<input type='submit' name='suhlas' value='Súhlasím' />
-												<input type='submit' name='odmietnutie' value='Nesúhlasím' />";
+												echo "<input type='submit' name='suhlas' value='Súhlasím' class='btn btn-success'>
+												<input type='submit' name='odmietnutie' value='Nesúhlasím' class='btn btn-danger'>";
 											else{
 												
 												if($row['odsuhlasenie']=="Nie")
@@ -626,7 +630,7 @@
 									}
 									if(is_null($row['body'])){
 										echo "<input type=\"hidden\" name=\"team\" value=\"".$team['tim']."\">";
-										echo "<tr><td colspan=\"4\"><input type='submit' name='submit' value='Rozdeliť body' /></td></tr>";
+										echo "<tr><td colspan=\"4\"><input type='submit' name='submit' value='Rozdeliť body' class='btn btn-primary'></td></tr>";
 									}
 									echo "</table></form>";
 								}
@@ -638,17 +642,81 @@
 					}
 				
 				
+					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
+					{?>
+						<!-- > /////////////////////////////////////// KOLACOVE GRAFY ///////////////////////////////////////////////////// <-->
+					<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+					<div id="chartContainer2" style="height: 370px; width: 100%;"></div>
 					
-				?>
+					<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+					<script>
+						// --------------------------------------- export --------------------------------
+						function exportData(tim){
+								/* var xhttp = new XMLHttpRequest();
+							xhttp.onreadystatechange = function() {
+								if (this.readyState == 4 && this.status == 200) {
+								alert( this.responseText );
+								}
+							};
+							xhttp.open("GET", "export.php", true);
+							xhttp.send();*/
+
+								var url = 'export.php?';
+									var query = 'tim=' + tim;
+
+									window.location.href = url + query;
+						}
+
+						// https://canvasjs.com/php-charts/pie-chart/
+						window.onload = function() {
+								
+						var chart = new CanvasJS.Chart("chartContainer", {
+							animationEnabled: true,
+							title: {
+								text: "Statistika timov"
+							},
+							subtitles: [{
+								text: "<?php echo $_GET['predmet'] ?>"
+							}],
+							data: [{
+								type: "pie",
+								yValueFormatString: "#,##0.00\"%\"",
+								indexLabel: "{label} ({y})",
+								dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+							}]
+						});
+						chart.render();
+
+						var chart2 = new CanvasJS.Chart("chartContainer2", {
+							animationEnabled: true,
+							title: {
+								text: "Statistika studentov"
+							},
+							subtitles: [{
+								text: "<?php echo $_GET['predmet'] ?>"
+							}],
+							data: [{
+								type: "pie",
+								yValueFormatString: "#,##0.00\"%\"",
+								indexLabel: "{label} ({y})",
+								dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
+							}]
+						});
+						chart2.render();
+						
+						}
+					</script>
+
+   
+	
+	 
+			<?php } ?>
+
 			</section>
         </div>
     </main>
-    
-    <!-- > /////////////////////////////////////// KOLACOVE GRAFY ///////////////////////////////////////////////////// <-->
-    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-    <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
-
-    <footer class="mt-4 pt-4 border-top">
+	
+	<footer class="mt-4 pt-4 border-top">
         <div class="container">
             <div class="row">
                 <div class="col-12 col-md">
@@ -672,66 +740,6 @@
             </div>
         </div>
     </footer>
-	
-	 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-     <script>
-        // --------------------------------------- export --------------------------------
-        function exportData(tim){
-        	  	/* var xhttp = new XMLHttpRequest();
-			  xhttp.onreadystatechange = function() {
-			    if (this.readyState == 4 && this.status == 200) {
-			     alert( this.responseText );
-			    }
-			  };
-			  xhttp.open("GET", "export.php", true);
-			  xhttp.send();*/
-
-			      var url = 'export.php?';
-				    var query = 'tim=' + tim;
-
-				    window.location.href = url + query;
-        }
-
-        // https://canvasjs.com/php-charts/pie-chart/
-        window.onload = function() {
-                 
-        var chart = new CanvasJS.Chart("chartContainer", {
-            animationEnabled: true,
-            title: {
-                text: "Statistika timov"
-            },
-            subtitles: [{
-                text: "<?php echo $_GET['predmet'] ?>"
-            }],
-            data: [{
-                type: "pie",
-                yValueFormatString: "#,##0.00\"%\"",
-                indexLabel: "{label} ({y})",
-                dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-            }]
-        });
-        chart.render();
-
-        var chart2 = new CanvasJS.Chart("chartContainer2", {
-            animationEnabled: true,
-            title: {
-                text: "Statistika studentov"
-            },
-            subtitles: [{
-                text: "<?php echo $_GET['predmet'] ?>"
-            }],
-            data: [{
-                type: "pie",
-                yValueFormatString: "#,##0.00\"%\"",
-                indexLabel: "{label} ({y})",
-                dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
-            }]
-        });
-        chart2.render();
-         
-        }
-
-    </script>
 	
 </body>
 

@@ -23,7 +23,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #013f78;">
             <div class="container">
-                <a class="navbar-brand" href="../">
+                <a class="navbar-brand" href="/finzad">
                     <img src="img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
                     Hodnotenie predmetu
                 </a>
@@ -34,17 +34,25 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="">Domov</a>
+                            <a class="nav-link" href="../">Domov</a>
+						</li>
+						<?php
+						if(isset($_SESSION['username']))
+                        {?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../grade">Hodnotenie</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="grade">Hodnotenie</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="agreegrade">Súhlas hodnotenia</a>
-                        </li>
+                            <a class="nav-link" href="../agreegrade">Súhlas hodnotenia</a>
+						</li>
+						<?php
+						if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
+                        {?>
                         <li class="nav-item">
                             <a class="nav-link" href="sendlogininfo">Rozposielanie údajov</a>
                         </li>
+						<?php } ?>
+						<?php } ?>
                     </ul>
                     <div class="my-2 my-lg-0">
                         <div class="my-2 my-lg-0">
