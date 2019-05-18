@@ -256,6 +256,7 @@
 								//echo "<br> Predmet i rok boli zvolene<br>";
 								$hlavicka = "";
 								$line = "";
+								$headerT = array();	
 								$hodnoty = explode("!", $_GET['PredmetN']);
 								echo "<h3>" . $hodnoty[0] . " z roku " . $hodnoty[1] . "</h3>";
 								$sqlZobraz = "Select * from grade where predmet = '". $hodnoty[0] ."' and rok = '". $hodnoty[1] ."'";
@@ -276,6 +277,7 @@
 											$pole = explode('!', $hlavicka);
 											foreach ($pole as $hodnota) {
 												echo "<th>" . $hodnota . "</th>";
+												array_push($headerT, $hodnota);
 											}
 											echo "</tr></thead><tbody>";										
 											$pole = explode('!', $rowZobraz['hodnoty']);
@@ -315,14 +317,19 @@
 											$line .= "\n";			
 										}
 									}
+
+									$qData = http_build_query(array('data' => $headerT));
+
 									echo "</tbody></table></div>";
 									echo "<br>";
 									echo "<form enctype='multipart/form-data' action='index.php' method='POST'>
 										<input type='hidden' name='predmet' value='". $hodnoty[0] ."'>
 										<input type='hidden' name='rok' value='". $hodnoty[1] ."'>
 										<input type='submit' name='zmaz' value='Zmaž hodnotenia' class='btn btn-danger'>
-										<input type='button' name='printPDF' value='Tlač do PDF' class='btn' onclick=\"window.location.href='table.php'\">
+										<input type='button' name='printPDF' value='Tlač do PDF' class='btn' onclick=\"window.location.href='table.php?$qData'\">
 										</form>";
+
+									//echo $qData;
 								}
 								// zapis do suboru
 								file_put_contents("content.txt",$line);	
