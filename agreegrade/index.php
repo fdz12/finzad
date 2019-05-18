@@ -621,7 +621,9 @@
 											echo "</td><td>";
 											
 											if(!is_null($row['body']) and $row['odsuhlasenie']=="Nevyjadril" and $ais_id == 	$row['id_ais'])
-												echo "<input type='submit' name='suhlas' value='Súhlasím' class='btn btn-success'>
+
+												echo "<input type=\"hidden\" name=\"team\" value=\"".$team['tim']."\">
+													<input type='submit' name='suhlas' value='Súhlasím' class='btn btn-success'>
 												<input type='submit' name='odmietnutie' value='Nesúhlasím' class='btn btn-danger'>";
 											else{
 												
