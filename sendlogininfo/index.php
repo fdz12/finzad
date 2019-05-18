@@ -92,7 +92,10 @@
 					}
 					///////
 					if (isset($_POST['submit2'])){
-						
+						$fileName2 = $_FILES['userfile']['name'];
+						$sender = $_POST['sender'];
+						$returning2 = fileupload($fileName2);
+						prepareMail($fileName2, $sender);
 					}
 				
 					//file upload ///////////////////////////////////////////////////////////////////
@@ -149,20 +152,78 @@
 						fclose($handle);
 						return "<br><a href=".$filename.">Stiahnutie</a>";
 					}
+					
+					function prepareMail($fileName2, $sender){
+						$first = 0;
+						$ipPlace = 0;
+						$loginPlace = 0;
+						$hesloPlace = 0;
+						$httpPlace = 0;
+						$emailPlace = 0;
+						$ip = '';
+						$login = '';
+						$heslo = '';
+						$http = '';
+						$email = '';
+						if (($handle = fopen($fileName2, "r")) !== FALSE) {		
+							while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+								if($first==0){
+									for($i; $i < sizeof($data); $i++){
+										if($data[$i] == "verejnaIP"){
+											$ipPlace = $i;
+										}
+										else if($data[$i] == "login"){
+											$loginPlace = $i;
+										}
+										else if($data[$i] == "heslo"){
+											$hesloPlace = $i;
+										}
+										else if($data[$i] == "http"){
+											$httpPlace = $i;
+										}
+										else if($data[$i] == "Email"){
+											$emailPlace = $i;
+										}
+									}
+									$first=1;
+								}
+								else{
+									$ip = $data[$ipPlace];
+									$login = $data[$loginPlace];
+									$heslo = $data[$hesloPlace];
+									$http = $data[$httpPlace];
+									$email = $data[$emailPlace];	
+									echo $ip . " " . $login . " " . $heslo . " " . $http . " " . $email . " " . $sender . "<br>";
+								}							
+							}
+							fclose($handle);
+						}
+						sendMail($ip, $login, $heslo, $http, $email, $sender);
+					}
+					
+					function sendMail($ip, $login, $heslo, $http, $email, $sender){
+						
+					}
 					/////////////////////////////////////////////////////////////////////////////////
 					
 					// MAIN
 					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin"){
 						echo "<br><h5>Generovanie hesiel</h5>";
 						echo "	<form enctype='multipart/form-data' action='index.php' method='POST'>
-									<label> Oddeľovač </label> 
+									
 									<label> Vyberte súbor </label> <input type='file' name='userfile' accept='.csv' required /> <br>
+									<label> Oddeľovač </label> 
 									<label><input type='radio' name='delim' value='coma' required> čiarka </label>
 									<label><input type='radio' name='delim' value='dotcoma' required> bodkočiarka </label> <br>
 									<input type='submit' name='submit1' value='Import' /> 
 								</form>";
 						echo $returning1."<hr>";
 						echo "<h5>Rozposlanie údajov</h5>";
+						echo "	<form enctype='multipart/form-data' action='index.php' method='POST'>
+									<label> Vyberte súbor </label> <input type='file' name='userfile' accept='.csv' required /> <br>
+									<label> Odosielatel </label> <input type='text' name='sender' required /> <br>
+									<input type='submit' name='submit2' value='Send' /> 
+								</form>";
 					}	
 				?>
 			</section>
