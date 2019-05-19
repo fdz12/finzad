@@ -1,7 +1,7 @@
 <?php
-require('../fpdf181/fpdf.php');
+require('../fpdf181/tfpdf.php');
 
-class PDF extends FPDF
+class PDF extends tFPDF
 {
 // Load data
 function LoadData($file)
@@ -94,14 +94,19 @@ function BasicTable($header, $data)
 }
 
 $pdf = new PDF();
+
+// Add a Unicode font (uses UTF-8)
+$pdf->AddFont('DejaVu','','DejaVuSansCondensed.ttf',true);
+$pdf->SetFont('DejaVu','',8);
+$pdf->AddPage();
+
 // Column headings
-//$header = array('ID', 'Meno', 'cv1', 'cv2', 'cv3', 'cv4', 'cv5', 'cv6', 'cv7', 'cv8', 'cv9', 'cv10', 'cv11', 'Z1', 'Z2', 'VT', 'SK-T', 'SK-P', 'Spolu', 'Znamka');
 $header =  $_GET['data'];
-//$header = iconv('UTF-8', 'windows-1252', $_GET['data']);
 // Data loading
 $data = $pdf->LoadData('content.txt');
-$pdf->SetFont('Arial','',8);
-$pdf->AddPage();
+
+//$pdf->SetFont('Arial','',8);
 $pdf->BasicTable($header,$data);
+
 $pdf->Output();
 ?>
