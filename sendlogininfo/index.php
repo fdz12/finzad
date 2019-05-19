@@ -204,10 +204,33 @@
 								
 								for($i=0; $i<count($data); $i++){
 									$text = str_replace("{{".$datatypes[$i]."}}",$data[$i],$text);
+									if($datatypes[$i] == "meno"){
+										$meno = $data[$i];
+										$datum = date("Y-m-d");			
+										$sql2 = "INSERT INTO mail (datum, meno, predmet, id_sablon) VALUES ('". $datum ."', '". $meno ."', '". $title ."', '". $sablonID ."')";
+										mysqli_query($conn, $sql2);			
+									}
 								}
 								$text = str_replace("{{sender}}",$sendername,$text);
 								
 								var_dump($text);
+							}
+							
+							$sql3 = "Select datum, meno, predmet, sablon_ID from mail";
+							$result3 = mysqli_query($conn, $sql);
+							$resultCheck = mysqli_num_rows($result);
+				
+							if($resultCheck > 0){
+								echo "fine";
+								echo "<table>
+										<tr>
+											<th>Datum</th>
+											<th>Meno</th>
+											<th>Predmet</th>
+											<th>Sablon ID</th>
+										</tr>";
+								
+								echo "</table>";
 							}
 							fclose($handle);
 							unlink(getcwd()."/".$fileName2);

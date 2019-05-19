@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 19, 2019 at 08:52 AM
+-- Generation Time: May 19, 2019 at 12:21 PM
 -- Server version: 5.7.25-0ubuntu0.18.04.2
 -- PHP Version: 7.2.15-0ubuntu0.18.04.1
 
@@ -92,7 +92,24 @@ INSERT INTO `history_login` (`id`, `id_user`, `datetime_login`) VALUES
 (19, 10, '2019-05-15 17:20:26'),
 (20, 80, '2019-05-15 17:20:58'),
 (21, 10, '2019-05-18 19:36:55'),
-(22, 10, '2019-05-19 07:13:51');
+(22, 10, '2019-05-19 07:13:51'),
+(23, 10, '2019-05-19 10:26:05'),
+(24, 10, '2019-05-19 11:56:30'),
+(25, 10, '2019-05-19 12:16:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mail`
+--
+
+CREATE TABLE `mail` (
+  `id` int(11) NOT NULL,
+  `datum` date NOT NULL,
+  `meno` varchar(255) NOT NULL,
+  `predmet` varchar(255) NOT NULL,
+  `id_sablon` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -257,6 +274,12 @@ ALTER TABLE `history_login`
   ADD KEY `id_user` (`id_user`);
 
 --
+-- Indexes for table `mail`
+--
+ALTER TABLE `mail`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
@@ -309,7 +332,12 @@ ALTER TABLE `grade`
 -- AUTO_INCREMENT for table `history_login`
 --
 ALTER TABLE `history_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+--
+-- AUTO_INCREMENT for table `mail`
+--
+ALTER TABLE `mail`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `migrations`
 --
