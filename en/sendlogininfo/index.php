@@ -29,7 +29,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #013f78;">
             <div class="container">
-                <a class="navbar-brand" href="">
+                <a class="navbar-brand" href="../">
                     <img src="../img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
                     Evaluation of subject
                 </a>
@@ -521,7 +521,7 @@
                             <a href="https://www.flaticon.com/" title="Flaticon" class="text-muted">www.flaticon.com</a>,
                             <a href="https://www.freepik.com/" class="text-muted">https://material.io</a>
                         </li>
-                        <li><a class="text-muted" href="../../sk/podstranka.php">Subsite</a></li>
+                        <li><a class="text-muted" href="../../en/podstranka.php">Subsite</a></li>
                     </ul>
                 </div>
             </div>

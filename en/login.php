@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Prihlásenie | Evaluation of subject</title>
+    <title>Login | Evaluation of subject</title>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="img/favicon.png">
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
@@ -34,26 +35,22 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="../">Home</a>
+                            <a class="nav-link" href="../en">Home</a>
 						</li>
-						<?php
-						if(isset($_SESSION['username']))
-                        {?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="../grade">Grade</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="../agreegrade">Agreement of grade</a>
-						</li>
-						<?php
-						if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
-                        {?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="sendlogininfo">Sending login info</a>
-                        </li>
-						<?php } ?>
-						<?php } ?>
                     </ul>
+                    <div class="my-2 my-lg-0 mr-3">
+                        <div class="my-2 my-lg-0">
+                            <div class="dropdown">
+                                <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="flag-icon flag-icon-gb"></span> EN
+                                </a>
+                                
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="../sk/login.php"><span class="flag-icon flag-icon-sk"></span> SK</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="my-2 my-lg-0">
                         <div class="my-2 my-lg-0">
                             <a class="btn btn-light" href="login.php" role="button">Log in</a>
@@ -164,7 +161,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card">
-                        <div class="card-header">Prihlásenie</div>
+                        <div class="card-header">Login</div>
 
                         <div class="card-body">
                             <form method="POST">
