@@ -1,5 +1,5 @@
 <?php
-require('../fpdf181/tfpdf.php');
+require('../../sk/fpdf181/tfpdf.php');
 
 class PDF extends tFPDF
 {
