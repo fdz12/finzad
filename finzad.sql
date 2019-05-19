@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 19, 2019 at 12:21 PM
+-- Generation Time: May 19, 2019 at 01:17 PM
 -- Server version: 5.7.25-0ubuntu0.18.04.2
 -- PHP Version: 7.2.15-0ubuntu0.18.04.1
 
@@ -110,6 +110,14 @@ CREATE TABLE `mail` (
   `predmet` varchar(255) NOT NULL,
   `id_sablon` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `mail`
+--
+
+INSERT INTO `mail` (`id`, `datum`, `meno`, `predmet`, `id_sablon`) VALUES
+(1, '2019-05-19', 'Pichlík Zdenek', 'aaa', 1),
+(2, '2019-05-19', 'Pichlík Zdenek', 'aaa', 1);
 
 -- --------------------------------------------------------
 
@@ -337,7 +345,7 @@ ALTER TABLE `history_login`
 -- AUTO_INCREMENT for table `mail`
 --
 ALTER TABLE `mail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `migrations`
 --

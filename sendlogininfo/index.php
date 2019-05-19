@@ -13,6 +13,9 @@
     <script src="../js/popper.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/script.js"></script>
+	
+	<!--table sorting-->
+	<script src="sort.js"></script>
 
 </head>
 
@@ -171,6 +174,13 @@
 										$emailcol=$i;
 								}
 								$text = str_replace("{{sender}}",$sendername,$text);
+								
+								if($datatypes[$i] == "meno"){
+										$meno = $data[$i];
+										$datum = date("Y-m-d");			
+										$sql2 = "INSERT INTO mail (datum, meno, predmet, id_sablon) VALUES ('". $datum ."', '". $meno ."', '". $title ."', '". $sablonID ."')";
+										mysqli_query($conn, $sql2);
+								}
 								sendHTML($sendername,$senderpassword,$senderemail,$title,$atachment,$text,$data[$emailcol]);
 							}
 							fclose($handle);
@@ -271,7 +281,7 @@
 										$meno = $data[$i];
 										$datum = date("Y-m-d");			
 										$sql2 = "INSERT INTO mail (datum, meno, predmet, id_sablon) VALUES ('". $datum ."', '". $meno ."', '". $title ."', '". $sablonID ."')";
-										mysqli_query($conn, $sql2);			
+										mysqli_query($conn, $sql2);
 									}
 
 									if($datatypes[$i]=="Email")
@@ -282,22 +292,6 @@
 								sendMail($sendername,$senderpassword,$senderemail,$title,$atachment,$text,$data[$emailcol]);
 							}
 							
-							$sql3 = "Select datum, meno, predmet, sablon_ID from mail";
-							$result3 = mysqli_query($conn, $sql);
-							$resultCheck = mysqli_num_rows($result);
-				
-							if($resultCheck > 0){
-								echo "fine";
-								echo "<table>
-										<tr>
-											<th>Datum</th>
-											<th>Meno</th>
-											<th>Predmet</th>
-											<th>Sablon ID</th>
-										</tr>";
-								
-								echo "</table>";
-							}
 							fclose($handle);
 							unlink(getcwd()."/".$fileName2);
 						}
@@ -424,6 +418,19 @@
 								<input type='submit' name='submit3' value='Poslať ako html'>
 							</form>";
 						echo $returning2."<hr>";
+						
+						echo "<h5>Odoslané maily</h5>";
+						$sql3 = "Select datum, meno, predmet, id_sablon from mail";
+						$result3 = mysqli_query($conn, $sql3);
+						
+						echo "<table class=\"sortable\"><tr><th>Dátum</th><th>Meno</th><th>Predmet správy</th><th>Šablón</th></tr>";
+						
+						while($rowstat = $result3->fetch_assoc()){
+							echo "<tr><td>".$rowstat['datum']."</td><td>".$rowstat['meno']."</td><td>".$rowstat['predmet']."</td><td>".$rowstat['id_sablon']."</td></tr>";
+						}
+						
+						echo "</table>";
+						
 					}	
 					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin" && isset($_POST['submit3'])){
 						echo "<form enctype='multipart/form-data' action='index.php' method='POST'>";
