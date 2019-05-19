@@ -1,11 +1,4 @@
 <!doctype html>
-<?php
-	//toto neviem, či je okay alebo či to nejako inak treba urobiť
-	if(isset($_POST['predmet']))
-	{
-		header('Location: index.php?predmet='.$_POST['PredmetN']);
-	}
-?>
 <html lang="sk">
 <head>
     <meta charset="UTF-8">

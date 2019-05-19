@@ -1,19 +1,13 @@
 <!doctype html>
-<?php
-	//toto neviem, či je okay alebo či to nejako inak treba urobiť
-	if(isset($_POST['predmet']))
-	{
-		header('Location: index.php?predmet='.$_POST['PredmetN']);
-	}
-?>
 <html lang="sk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Súhlas hodnotenia | Hodnotenie predmetu</title>
+    <title>Agreement of grade | Evaluation of subject</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="../css/jquery-ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="../css/jquery-ui.min.css" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="../img/favicon.png">
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/jquery-ui.min.js"></script>
@@ -33,7 +27,7 @@
             <div class="container">
                 <a class="navbar-brand" href="../">
                     <img src="../img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                    Hodnotenie predmetu
+                    Evaluation of subject
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -45,19 +39,32 @@
                             <a class="nav-link" href="../">Domov</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../grade">Hodnotenie </a>
+                            <a class="nav-link" href="../grade">Grade </a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" href="../agreegrade">Súhlas hodnotenia</a>
+                            <a class="nav-link" href="../agreegrade">Agreement of grade</a>
 						</li>
 						<?php
 						if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
 						{?>
                         <li class="nav-item">
-                            <a class="nav-link" href="../sendlogininfo">Rozposielanie údajov</a>
+                            <a class="nav-link" href="../sendlogininfo">Sending login info</a>
 						</li>
 						<?php } ?>
-                    </ul>
+					</ul>
+					<div class="my-2 my-lg-0 mr-3">
+                        <div class="my-2 my-lg-0">
+                            <div class="dropdown">
+                                <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="flag-icon flag-icon-gb"></span> EN
+                                </a>
+                                
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="../../sk/agreegrade"><span class="flag-icon flag-icon-sk"></span> SK</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="my-2 my-lg-0">
                         <div class="my-2 my-lg-0">
                             <?php if(isset($_SESSION['username'])) { ?>
@@ -67,11 +74,11 @@
                                 </a>
                                 
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="../logout.php">Odhlásiť sa</a>
+                                    <a class="dropdown-item" href="../logout.php">Log out</a>
                                 </div>
                             </div>
                             <?php } else { ?>
-                            <a class="btn btn-light" href="../login.php" role="button">Prihlásiť sa</a>
+                            <a class="btn btn-light" href="../login.php" role="button">Log in</a>
                             <?php } ?>
                         </div>
                     </div>
@@ -84,7 +91,7 @@
         <div class="container mt-4">
 			<div class="row">
 				<div class="col">
-					<h4>Súhlas hodnotenia</h4>
+					<h4>Agreement of grade</h4>
 				</div>
 			</div>
 			<div class="row">
@@ -98,7 +105,7 @@
 					<h5>Import</h5>
 					<form enctype='multipart/form-data' action='index.php' method='POST'>
 						<div class="form-group">
-							<label for="year">Školský rok</label>
+							<label for="year">School year</label>
 							<select class="form-control" name="year" id="year" required>
 								<option value='2018/2019'>2018/2019</option>
 								<option value='2017/2018'>2017/2018</option>
@@ -108,35 +115,35 @@
 							</select>
 						</div>
 						<div class="form-group">
-							<label for="subject">Názov predmetu</label>
-							<input type="text" class="form-control" name="subject" id="subject" placeholder="Názov predmetu" required>
+							<label for="subject">Subject name</label>
+							<input type="text" class="form-control" name="subject" id="subject" placeholder="Subject name" required>
 						</div>
 						<div class="form-group">
-							<label for="userfile">Vyberte súbor</label>
+							<label for="userfile">Choose a file</label>
 							<input type="file" class="form-control" name="userfile" id="userfile" required>
 						</div>
 						<label>
-							Oddelovač
+							Separator
 						</label>
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="delim" id="coma" value="coma" required>
 							<label class="form-check-label" for="coma">
-								čiarka
+								comma
 							</label>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="coma" required>
 							<label class="form-check-label" for="dotcoma">
-								bodkočiarka
+								semicolon
 							</label>
 						</div>
-						<input type='submit' name='submit' class="btn btn-primary mt-3" value='Importovať'> 
+						<input type='submit' name='submit' class="btn btn-primary mt-3" value='Import'> 
 					</form>
 				</div>
 			</div>
 			<div class="row my-5">
 				<div class="col">
-					<h5>Zobrazenie hodnotení</h5>
+					<h5>View grade</h5>
 					<?php
 						
 						function uploadFile($userfile){
@@ -144,13 +151,13 @@
 							$uploadfile = getcwd()."/". $userfile;
 							
 							if (file_exists($uploadfile)){
-								  echo "Súbor s nazvom $uploadfile uz existuje\n";
+								  echo "File with name $uploadfile exists\n";
 								} 
 							  else{
 								  if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $uploadfile)) {
-									  echo "Súbor bol úspešne pridaný do priečninku Files\n";
+									  echo "File was uploaded to directory Files\n";
 								  } else{
-									  echo "Chyba pri nahrávaní súboru!\n";
+									  echo "Error while uploading a file!\n";
 								  }
 							  }
 							echo "userfile".$uploadfile;
@@ -295,7 +302,7 @@
 								$predmet = $rowP['predmet'];
 							}
 							echo "</select></div>";
-							echo "<input type='submit' value='Zobraz tímy' class='btn btn-primary'> ";
+							echo "<input type='submit' value='Show teams' class='btn btn-primary'> ";
 							echo "</form></div>";					
 						}
 											
@@ -331,19 +338,19 @@
 										 
 									
 									if ($nastaveneBody == "true")
-										echo "<h3> Členovia tímu č. ".$row2['cislo_timu']." s " . $body . " bodmi</h3>";
+										echo "<h3> Members of team no. ".$row2['cislo_timu']." with " . $body . " points</h3>";
 									else
-										echo "<h3> Členovia tímu č. ".$row2['cislo_timu']."</h3>";
+										echo "<h3> Members of team no. ".$row2['cislo_timu']."</h3>";
 									
 									$sql3 = "select * from student join users on id_student=id_ais WHERE tim=".$row2['id_timu'];
 									$result3 = mysqli_query($conn, $sql3);  
 									if (mysqli_num_rows($result3) > 0) {
 										echo "<div class='overflow-auto'><table class='table'>
 											<thead><tr><th>ID</th>
-													  <th>Meno</th>
+													  <th>Name</th>
 													  <th>Email</th>
-													  <th>Počet bodov</th>
-													  <th>Súhlas</th>
+													  <th>Score</th>
+													  <th>Agreement</th>
 													</tr></thead><tbody>";
 
 										while($row = mysqli_fetch_assoc($result3)) {
@@ -379,17 +386,17 @@
 										{
 											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
 											echo "<input type='hidden' name='idTimu' value=" . $row2['id_timu'] . ">";									
-											echo "<input type='submit' name='suhlas' value='Súhlasím'>";
+											echo "<input type='submit' name='suhlas' value='I agree'>";
 											echo "</form>";
 											
 											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
 											echo "<input type='hidden' name='idTimu' value=" . $row2['id_timu'] . ">";									
-											echo "<input type='submit' name='nesuhlas' value='Nesúhlasím'>";
+											echo "<input type='submit' name='nesuhlas' value='I disagree'>";
 											echo "</form>";
 										}
 										else if($odsuhlaseneBodyAdminom == "true")
 										{
-											echo "Rozdelenie bodov bolo odsúhlasené.<br>";
+											echo "Splitting of points was agreed.<br>";
 											// ked su rozdelene aj odsulasene body mozme ich exportovat
 											//echo $row2['id_timu'];
 											//echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."&tim=".$row2['id_timu']."' method='POST'>";
@@ -399,7 +406,7 @@
 										}
 										else if($odsuhlaseneBodyAdminom == "false")
 										{
-											echo "Rozdelenie bodov bolo zamietnuté.<br>";
+											echo "Splitting of points was disagreed..<br>";
 											// ked su rozdelene aj odsulasene body mozme ich exportovat
 											//echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."&tim=".$row2['id_timu']."' method='POST'>";
 											echo "<input type='button' name='export' value='Export' onclick='exportData(".$row2['id_timu'].")'>";
@@ -460,9 +467,9 @@
 							}
 
 							echo "<div class='my-4 overflow-auto'><table class='table'>
-											<thead><tr><th>Pocet timov</th>
-													  <th>Pocet uzavretych timov</th>
-													  <th>Pocet timov ku ktorym sa treba vyjadrit</th>
+											<thead><tr><th>Number of teams</th>
+													  <th>Number of closed teams</th>
+													  <th>Number of teams to which it is necessary to comment</th>
 													  <th>Počet timov s nevyjadrenymi studentami</th>
 											</tr></thead>
 								<tbody>
@@ -604,7 +611,7 @@
 									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Akceptované";
 									if($rowteam['odsuhlasene']=="Nie") echo "Rozdelenie Neakceptované";
 									echo "</th></tr>";
-									echo "<tr><th>Email</th><th>Meno</th><th>Body</th><th>Súhlas</th></tr>";
+									echo "<tr><th>Email</th><th>Name</th><th>Body</th><th>Agreement</th></tr>";
 									
 									$sql = "SELECT student.body, student.odsuhlasenie, users.name, users.email, users.id_ais FROM student JOIN users ON student.id_student = users.id_ais WHERE student.tim=".$team['tim'];
 									$result= mysqli_query($conn, $sql);
@@ -613,7 +620,7 @@
 										while($row = $result->fetch_assoc()){
 											echo "<tr><td>".$row['email']."</td><td>".$row['name']."</td><td>";
 											if(is_null($row['body'])){
-												echo "<div class='form-group mb-0'><input name=\"body[".$i."]\" type=\"number\" class='form-control' placeholder='Počet bodov' required></div>";
+												echo "<div class='form-group mb-0'><input name=\"body[".$i."]\" type=\"number\" class='form-control' placeholder='Score' required></div>";
 												$i++;
 											}
 											else 
@@ -623,8 +630,8 @@
 											if(!is_null($row['body']) and $row['odsuhlasenie']=="Nevyjadril" and $ais_id == 	$row['id_ais'])
 
 												echo "<input type=\"hidden\" name=\"team\" value=\"".$team['tim']."\">
-													<input type='submit' name='suhlas' value='Súhlasím' class='btn btn-success'>
-												<input type='submit' name='odmietnutie' value='Nesúhlasím' class='btn btn-danger'>";
+													<input type='submit' name='suhlas' value='I agree' class='btn btn-success'>
+												<input type='submit' name='odmietnutie' value='I disagree' class='btn btn-danger'>";
 											else{
 												
 												if($row['odsuhlasenie']=="Nie")
@@ -740,19 +747,19 @@
                 <div class="col-12 col-md">
                     <img class="mb-2" src="../img/favicon.png" alt="" width="24" height="24">
                     <small class="d-block mb-3 text-muted">© 2019</small>
-                    <span class="d-block mb-3 text-muted">Vytvorili: Denis Žuffa, Anna Skachová, Dominik Raslavský, Balázs Bence Bertalan, Zdenek Pichlík</span>
+                    <span class="d-block mb-3 text-muted">Made by Denis Žuffa, Anna Skachová, Dominik Raslavský, Balázs Bence Bertalan, Zdenek Pichlík</span>
                 </div>
 
             </div>
             <div class="row mt-4">
                 <div class="col-6 col-md">
-                    <h5>O stránke</h5>
+                    <h5>About website</h5>
                     <ul class="list-unstyled text-small">
-                        <li class="text-muted">Zdroje ikon:
+                        <li class="text-muted">Source of icons:
                             <a href="https://www.flaticon.com/" title="Flaticon" class="text-muted">www.flaticon.com</a>,
                             <a href="https://www.freepik.com/" class="text-muted">https://material.io</a>
                         </li>
-                        <li><a class="text-muted" href="#">Kontakt</a></li>
+                        <li><a class="text-muted" href="../sk/podstranka.php">Subsite</a></li>
                     </ul>
                 </div>
             </div>

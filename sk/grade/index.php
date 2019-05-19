@@ -95,7 +95,7 @@
         <div class="container mt-4">
             <div class="row">
 				<div class="col">
-					<h4>Hodnotenie</h4>
+					<h4>Grade</h4>
 				</div>
             </div>
 			<div class="row mt-3 mb-5">
