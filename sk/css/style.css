@@ -1,0 +1,25 @@
+.color-white {
+    color: white !important;
+}
+
+.jumbotron {
+    background: url('../img/banner.jpg') no-repeat;
+	background-size: cover;
+}
+
+.overflow-auto {
+    overflow: auto;
+}
+
+table, th, td {
+    /*border: 1px solid black;
+    border-collapse: collapse;*/		
+}
+
+th, td {
+    /*padding: 15px;*/
+}
+
+table {
+    border-spacing: 5px;
+}
