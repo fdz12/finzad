@@ -1,7 +1,0 @@
-﻿ID;meno;Email;login;heslo;verejnaIP;privatnaIP;ssh;http;https;misc1;misc2
-12435;"Priezvisko1 Meno1";login1@is.stuba.sk;login1;AUbWeyjB5XgTNyM;147.175.121.210;192.168.0.1;2201;8001;4401;9001;1901
-124156;"Priezvisko2 Meno2";login2@is.stuba.sk;login2;ghPi4pWuIn74DCk;147.175.121.210;192.168.0.1;2201;8002;4402;9002;1902
-24531;"Priezvisko3 Meno3";login3@is.stuba.sk;login3;Glya5Ol5cWSnr8e;147.175.121.210;192.168.0.1;2201;8003;4403;9003;1903
-765432;"Priezvisko4 Meno4";login4@is.stuba.sk;login4;PCmcTRCt0cBnX58;147.175.121.210;192.168.0.1;2201;8004;4404;9004;1904
-85523;"Priezvisko5 Meno5";login5@is.stuba.sk;login5;jnuA5VDbyY1ZH0b;147.175.121.210;192.168.0.1;2201;8005;4405;9005;1905
-79704;"Pichlík Zdenek";xpichlik@is.stuba.sk;xpichlik;xyBE7vtb0J8wPWF;147.175.121.210;192.168.0.1;2201;8006;4406;9006;1906
