@@ -36,10 +36,10 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="../">Domov</a>
+                            <a class="nav-link" href="../">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../grade">Grade </a>
+                            <a class="nav-link" href="../grade">Grade</a>
                         </li>
                         <li class="nav-item active">
                             <a class="nav-link" href="../agreegrade">Agreement of grade</a>
@@ -364,7 +364,13 @@
 												 echo "<td></td>";
 												 $rozdeleneBody = "false";
 											 }
-											 echo "<td> " . $row['odsuhlasenie'] . "</td></tr>";
+											 if ($row['odsuhlasenie'] == "Nie") {
+												 echo "<td>Disagreed</td></tr>";
+											 } else if ($row['odsuhlasenie'] == "Áno") {
+												echo "<td>Agreed</td></tr>";
+											} else {
+												echo "<td>Without agreement</td></tr>";
+											}
 											 if ($row['odsuhlasenie'] != "Áno")
 												 $odsuhlaseneBody = "false";
 										 }
@@ -375,10 +381,10 @@
 										if($nastaveneBody == "false") //ak nemá nastavené body tak ukáže formulár na nastavenie
 										{
 											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
-											echo "<input type='number' id='body".$row2['id_timu']."' name='body'>";
+											echo "<div class='form-group'><input type='number' id='body".$row2['id_timu']."' class='form-control' name='body'></div>";
 											echo "<input type='hidden' name='idTimu' value=" . $row2['id_timu'] . ">";
 											// ZMENA POMOCOU AJAX alebo XMLRPC!!!
-											echo "<input type='submit' name='change' value='Change'>";
+											echo "<input type='submit' name='change' class='btn btn-primary' value='Change'>";
 											echo "</form>";
 										}
 										
@@ -470,7 +476,7 @@
 											<thead><tr><th>Number of teams</th>
 													  <th>Number of closed teams</th>
 													  <th>Number of teams to which it is necessary to comment</th>
-													  <th>Počet timov s nevyjadrenymi studentami</th>
+													  <th>Number of teams in which students didn't make a decision</th>
 											</tr></thead>
 								<tbody>
 											<tr><td>$pocetTimov</td>
@@ -481,9 +487,9 @@
 
 
 							$dataPoints = array( 
-								array("label"=>"uzavrete", "y"=>($uzavrete/$pocetTimov)),
-								array("label"=>"treba vyjadrit", "y"=>($vyjadritsa/$pocetTimov)),
-								array("label"=>"nevyjadrili sa studenti", "y"=>($studNevyj/$pocetTimov))
+								array("label"=>"closed", "y"=>($uzavrete/$pocetTimov)),
+								array("label"=>"necessary to comment", "y"=>($vyjadritsa/$pocetTimov)),
+								array("label"=>"didn't make a decision", "y"=>($studNevyj/$pocetTimov))
 							);
 
 							// --------------------------------------------- KU GRAFU STUDENTI -------------------------------------
@@ -511,10 +517,10 @@
 							}
 							
 							echo "<div class='my-4 overflow-auto'><table class='table'>
-											<thead><tr><th>Pocet studentov v predmete</th>
-													  <th>Pocet suhlasiacich studentov</th>
-													  <th>Pocet nesuhlasiacich studentov</th>
-													  <th>Počet nevyjadrenych studentov</th>
+											<thead><tr><th>Number of students in the subject</th>
+													  <th>Number of students with agreement</th>
+													  <th>Number of students with disagreement</th>
+													  <th>Number of students which didn't make a decision</th>
 											</tr></thead>
 								<tbody>
 											<tr><td>$pocetStudentov</td>
@@ -524,9 +530,9 @@
 								</tbody></table></div>";
 
 							$dataPoints2 = array( 
-								array("label"=>"súhlasiaci študenti", "y"=>($anoStud/$pocetStudentov)),
-								array("label"=>"nesúhlasiaci študenti", "y"=>($nieStud/$pocetStudentov)),
-								array("label"=>"nevyjadrení študenti", "y"=>($nevieStud/$pocetStudentov))
+								array("label"=>"students, which agreed", "y"=>($anoStud/$pocetStudentov)),
+								array("label"=>"students, which didn't agreed", "y"=>($nieStud/$pocetStudentov)),
+								array("label"=>"students without agreement", "y"=>($nevieStud/$pocetStudentov))
 							);
 
 							
@@ -562,7 +568,7 @@
 							$result = mysqli_query($conn, $sql);
 							$row = $result->fetch_assoc();
 							if(is_null($row['body']))
-								echo "<p style=\"color:red\">Ešte nemáte zadelené body!</p>";
+								echo "<p style=\"color:red\">You don't have set points yet.</p>";
 							else{
 								if($sucet !=$row['body'])
 								echo "<p style=\"color:red\">Súčet individuálnych bodov sa musí rovnať bodom tímu!</p>";
@@ -608,8 +614,8 @@
 									
 									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table class='table'><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']."</th></tr>";
 									echo "<tr><th>Tím: ".$rowteam['cislo_timu']."</th><th>Celkové body: ".$rowteam['body']."</th> <th colspan=\"2\">";
-									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Akceptované";
-									if($rowteam['odsuhlasene']=="Nie") echo "Rozdelenie Neakceptované";
+									if($rowteam['odsuhlasene']=="Áno") echo "Set points accepted.";
+									if($rowteam['odsuhlasene']=="Nie") echo "Set points wasn't accepted.";
 									echo "</th></tr>";
 									echo "<tr><th>Email</th><th>Name</th><th>Body</th><th>Agreement</th></tr>";
 									
@@ -635,13 +641,13 @@
 											else{
 												
 												if($row['odsuhlasenie']=="Nie")
-													echo "Nesúhlasí";
+													echo "Disagreed";
 												
 												if($row['odsuhlasenie']=="Áno")
-													echo "Súhlasí";
+													echo "Agreed";
 											
 												if($row['odsuhlasenie']=="Nevyjadril")
-													echo "Nevyjadril";	
+													echo "Didn't make a decision";	
 												
 											}
 																							
@@ -655,7 +661,7 @@
 									}
 									if($rozdel == 0){
 										echo "<input type=\"hidden\" name=\"team\" value=\"".$team['tim']."\">";
-										echo "<tr><td colspan=\"4\"><input type='submit' name='submit' value='Rozdeliť body' class='btn btn-primary'></td></tr>";
+										echo "<tr><td colspan=\"4\"><input type='submit' name='submit' value='Divide points' class='btn btn-primary'></td></tr>";
 									}
 									echo "</table></form>";
 								}
@@ -698,7 +704,7 @@
 						var chart = new CanvasJS.Chart("chartContainer", {
 							animationEnabled: true,
 							title: {
-								text: "Štatistika timov"
+								text: "Statistics of teams"
 							},
 							subtitles: [{
 								text: "<?php echo $_GET['predmet'] ?>"
@@ -715,7 +721,7 @@
 						var chart2 = new CanvasJS.Chart("chartContainer2", {
 							animationEnabled: true,
 							title: {
-								text: "Statistika studentov"
+								text: "Statistics of students"
 							},
 							subtitles: [{
 								text: "<?php echo $_GET['predmet'] ?>"
