@@ -369,7 +369,7 @@
 												 $rozdeleneBody = "false";
 											 }
 											 echo "<td> " . $row['odsuhlasenie'] . "</td></tr>";
-											 if ($row['odsuhlasenie'] != "Áno")
+											  if ($row['odsuhlasenie'] == "Nevyjadril")
 												 $odsuhlaseneBody = "false";
 										 }
 								

@@ -375,7 +375,7 @@
 											} else {
 												echo "<td>Without agreement</td></tr>";
 											}
-											 if ($row['odsuhlasenie'] != "Áno")
+											 if ($row['odsuhlasenie'] == "Nevyjadril")
 												 $odsuhlaseneBody = "false";
 										 }
 								
