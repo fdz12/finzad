@@ -382,7 +382,7 @@
 											echo "<input type='number' id='body".$row2['id_timu']."' name='body'>";
 											echo "<input type='hidden' name='idTimu' value=" . $row2['id_timu'] . ">";
 											// ZMENA POMOCOU AJAX alebo XMLRPC!!!
-											echo "<input type='submit' name='change' value='Change'>";
+											echo "<input type='submit' name='change' class='btn btn-primary' value='Zmeniť'>";
 											echo "</form>";
 										}
 										
@@ -404,7 +404,7 @@
 											// ked su rozdelene aj odsulasene body mozme ich exportovat
 											//echo $row2['id_timu'];
 											//echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."&tim=".$row2['id_timu']."' method='POST'>";
-											echo "<input type='button' name='export' value='Export' onclick='exportData(".$row2['id_timu'].")'>";
+											echo "<input type='button' name='export' value='Export' class='btn btn-primary' onclick='exportData(".$row2['id_timu'].")'>";
 											//echo "</form>";
 
 										}
@@ -413,7 +413,7 @@
 											echo "Rozdelenie bodov bolo zamietnuté.<br>";
 											// ked su rozdelene aj odsulasene body mozme ich exportovat
 											//echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."&tim=".$row2['id_timu']."' method='POST'>";
-											echo "<input type='button' name='export' value='Export' onclick='exportData(".$row2['id_timu'].")'>";
+											echo "<input type='button' name='export' value='Export' class='btn btn-primary' onclick='exportData(".$row2['id_timu'].")'>";
 											// echo "</form>";
 										}
 									} else {
@@ -471,10 +471,10 @@
 							}
 
 							echo "<div class='my-4 overflow-auto'><table class='table'>
-											<thead><tr><th>Pocet timov</th>
-													  <th>Pocet uzavretych timov</th>
-													  <th>Pocet timov ku ktorym sa treba vyjadrit</th>
-													  <th>Počet timov s nevyjadrenymi studentami</th>
+											<thead><tr><th>Počet tímov</th>
+													  <th>Počet uzavretých tímov</th>
+													  <th>Počet tímov ku ktorým sa treba vyjadriť</th>
+													  <th>Počet timov s nevyjadrenými študentami</th>
 											</tr></thead>
 								<tbody>
 											<tr><td>$pocetTimov</td>
@@ -485,9 +485,9 @@
 
 
 							$dataPoints = array( 
-								array("label"=>"uzavrete", "y"=>($uzavrete/$pocetTimov)*100),
-								array("label"=>"treba vyjadrit", "y"=>($vyjadritsa/$pocetTimov)*100),
-								array("label"=>"nevyjadrili sa studenti", "y"=>($studNevyj/$pocetTimov)*100)
+								array("label"=>"uzavreté", "y"=>($uzavrete/$pocetTimov)*100),
+								array("label"=>"treba vyjadriť", "y"=>($vyjadritsa/$pocetTimov)*100),
+								array("label"=>"nevyjadrili sa študenti", "y"=>($studNevyj/$pocetTimov)*100)
 							);
 
 							// --------------------------------------------- KU GRAFU STUDENTI -------------------------------------
@@ -515,10 +515,10 @@
 							}
 							
 							echo "<div class='my-4 overflow-auto'><table class='table'>
-											<thead><tr><th>Pocet studentov v predmete</th>
-													  <th>Pocet suhlasiacich studentov</th>
-													  <th>Pocet nesuhlasiacich studentov</th>
-													  <th>Počet nevyjadrenych studentov</th>
+											<thead><tr><th>Počet študentov v predmete</th>
+													  <th>Počet súhlasiacich študentov</th>
+													  <th>Počet nesúhlasiacich študentov</th>
+													  <th>Počet nevyjadrených študentov</th>
 											</tr></thead>
 								<tbody>
 											<tr><td>$pocetStudentov</td>
@@ -702,7 +702,7 @@
 						var chart = new CanvasJS.Chart("chartContainer", {
 							animationEnabled: true,
 							title: {
-								text: "Štatistika timov"
+								text: "Štatistika tímov"
 							},
 							subtitles: [{
 								text: "<?php echo $_GET['predmet'] ?>"
@@ -719,7 +719,7 @@
 						var chart2 = new CanvasJS.Chart("chartContainer2", {
 							animationEnabled: true,
 							title: {
-								text: "Statistika studentov"
+								text: "Štatistika študentov"
 							},
 							subtitles: [{
 								text: "<?php echo $_GET['predmet'] ?>"
