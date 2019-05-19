@@ -283,8 +283,8 @@
 						if (mysqli_num_rows($resultPredmety) > 0) 
 						{		
 							$existujePredmet = "true";
-							echo "<div class='mb-4'><form enctype='multipart/form-data' action='index.php' method='POST'>";
-							echo "<div class='form-group'><select name='PredmetN' class='form-control' required>";
+							echo "<div class='mb-4'><form enctype='multipart/form-data' action='index.php' method='GET'>";
+							echo "<div class='form-group'><select name='predmet' class='form-control' required>";
 							while($rowP = mysqli_fetch_assoc($resultPredmety)) 
 							{
 								if ($rowP['predmet'] == $_GET['predmet']){
@@ -295,7 +295,7 @@
 								$predmet = $rowP['predmet'];
 							}
 							echo "</select></div>";
-							echo "<input type='submit' name='predmet' value='Zobraz tímy' class='btn btn-primary'> ";
+							echo "<input type='submit' value='Zobraz tímy' class='btn btn-primary'> ";
 							echo "</form></div>";					
 						}
 											
