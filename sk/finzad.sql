@@ -2,10 +2,10 @@
 -- version 4.6.6deb5
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: May 19, 2019 at 01:17 PM
--- Server version: 5.7.25-0ubuntu0.18.04.2
--- PHP Version: 7.2.15-0ubuntu0.18.04.1
+-- Hostiteľ: localhost:3306
+-- Čas generovania: Ne 19.Máj 2019, 17:22
+-- Verzia serveru: 5.7.25-0ubuntu0.18.04.2
+-- Verzia PHP: 7.2.15-0ubuntu0.18.04.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `finzad`
+-- Databáza: `finzad`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `grade`
+-- Štruktúra tabuľky pre tabuľku `grade`
 --
 
 CREATE TABLE `grade` (
@@ -37,7 +37,7 @@ CREATE TABLE `grade` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `grade`
+-- Sťahujem dáta pre tabuľku `grade`
 --
 
 INSERT INTO `grade` (`id`, `id_student`, `meno`, `predmet`, `rok`, `hlavicka`, `hodnoty`) VALUES
@@ -57,7 +57,7 @@ INSERT INTO `grade` (`id`, `id_student`, `meno`, `predmet`, `rok`, `hlavicka`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `history_login`
+-- Štruktúra tabuľky pre tabuľku `history_login`
 --
 
 CREATE TABLE `history_login` (
@@ -67,7 +67,7 @@ CREATE TABLE `history_login` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
 --
--- Dumping data for table `history_login`
+-- Sťahujem dáta pre tabuľku `history_login`
 --
 
 INSERT INTO `history_login` (`id`, `id_user`, `datetime_login`) VALUES
@@ -95,12 +95,16 @@ INSERT INTO `history_login` (`id`, `id_user`, `datetime_login`) VALUES
 (22, 10, '2019-05-19 07:13:51'),
 (23, 10, '2019-05-19 10:26:05'),
 (24, 10, '2019-05-19 11:56:30'),
-(25, 10, '2019-05-19 12:16:48');
+(25, 10, '2019-05-19 12:16:48'),
+(26, 10, '2019-05-19 13:41:05'),
+(27, 68, '2019-05-19 14:17:34'),
+(28, 10, '2019-05-19 14:25:20'),
+(29, 10, '2019-05-19 16:35:38');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mail`
+-- Štruktúra tabuľky pre tabuľku `mail`
 --
 
 CREATE TABLE `mail` (
@@ -112,7 +116,7 @@ CREATE TABLE `mail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `mail`
+-- Sťahujem dáta pre tabuľku `mail`
 --
 
 INSERT INTO `mail` (`id`, `datum`, `meno`, `predmet`, `id_sablon`) VALUES
@@ -122,7 +126,7 @@ INSERT INTO `mail` (`id`, `datum`, `meno`, `predmet`, `id_sablon`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Štruktúra tabuľky pre tabuľku `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -132,7 +136,7 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `migrations`
+-- Sťahujem dáta pre tabuľku `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -142,7 +146,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `password_resets`
+-- Štruktúra tabuľky pre tabuľku `password_resets`
 --
 
 CREATE TABLE `password_resets` (
@@ -154,7 +158,7 @@ CREATE TABLE `password_resets` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `sablon`
+-- Štruktúra tabuľky pre tabuľku `sablon`
 --
 
 CREATE TABLE `sablon` (
@@ -164,7 +168,7 @@ CREATE TABLE `sablon` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `sablon`
+-- Sťahujem dáta pre tabuľku `sablon`
 --
 
 INSERT INTO `sablon` (`ID`, `Sablona`, `name`) VALUES
@@ -173,7 +177,7 @@ INSERT INTO `sablon` (`ID`, `Sablona`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `student`
+-- Štruktúra tabuľky pre tabuľku `student`
 --
 
 CREATE TABLE `student` (
@@ -185,7 +189,7 @@ CREATE TABLE `student` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_slovak_ci;
 
 --
--- Dumping data for table `student`
+-- Sťahujem dáta pre tabuľku `student`
 --
 
 INSERT INTO `student` (`id`, `id_student`, `tim`, `body`, `odsuhlasenie`) VALUES
@@ -206,7 +210,7 @@ INSERT INTO `student` (`id`, `id_student`, `tim`, `body`, `odsuhlasenie`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `team`
+-- Štruktúra tabuľky pre tabuľku `team`
 --
 
 CREATE TABLE `team` (
@@ -214,25 +218,26 @@ CREATE TABLE `team` (
   `cislo_timu` int(11) NOT NULL,
   `body` int(11) DEFAULT NULL,
   `predmet` varchar(255) NOT NULL,
+  `rok` varchar(20) NOT NULL,
   `odsuhlasene` enum('Áno','Nie','Nevyjadril') NOT NULL DEFAULT 'Nevyjadril'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `team`
+-- Sťahujem dáta pre tabuľku `team`
 --
 
-INSERT INTO `team` (`id_timu`, `cislo_timu`, `body`, `predmet`, `odsuhlasene`) VALUES
-(22, 1, NULL, 'Webtech', 'Nevyjadril'),
-(23, 5, 150, 'Webtech', 'Nie'),
-(24, 15, 200, 'Webtech', 'Áno'),
-(25, 1, NULL, 'Webtech2', 'Nevyjadril'),
-(26, 5, NULL, 'Webtech2', 'Nevyjadril'),
-(27, 15, 130, 'Webtech2', 'Nevyjadril');
+INSERT INTO `team` (`id_timu`, `cislo_timu`, `body`, `predmet`, `rok`, `odsuhlasene`) VALUES
+(22, 1, NULL, 'Webtech', '2018/2019', 'Nevyjadril'),
+(23, 5, 150, 'Webtech', '2018/2019', 'Nie'),
+(24, 15, 200, 'Webtech', '2018/2019', 'Áno'),
+(25, 1, NULL, 'Webtech2', '2018/2019', 'Nevyjadril'),
+(26, 5, NULL, 'Webtech2', '2018/2019', 'Nevyjadril'),
+(27, 15, 130, 'Webtech2', '2018/2019', 'Nevyjadril');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Štruktúra tabuľky pre tabuľku `users`
 --
 
 CREATE TABLE `users` (
@@ -248,7 +253,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Sťahujem dáta pre tabuľku `users`
 --
 
 INSERT INTO `users` (`id`, `id_ais`, `login`, `name`, `email`, `password`, `type`, `role`, `created_at`) VALUES
@@ -265,48 +270,48 @@ INSERT INTO `users` (`id`, `id_ais`, `login`, `name`, `email`, `password`, `type
 (80, 79704, 'xpichlik', 'Pichlík Zdenek', 'xpichlik@is.stuba.sk', NULL, 'ldap', 'student', '2019-05-15 14:20:15');
 
 --
--- Indexes for dumped tables
+-- Kľúče pre exportované tabuľky
 --
 
 --
--- Indexes for table `grade`
+-- Indexy pre tabuľku `grade`
 --
 ALTER TABLE `grade`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `history_login`
+-- Indexy pre tabuľku `history_login`
 --
 ALTER TABLE `history_login`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_user` (`id_user`);
 
 --
--- Indexes for table `mail`
+-- Indexy pre tabuľku `mail`
 --
 ALTER TABLE `mail`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `migrations`
+-- Indexy pre tabuľku `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `password_resets`
+-- Indexy pre tabuľku `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indexes for table `sablon`
+-- Indexy pre tabuľku `sablon`
 --
 ALTER TABLE `sablon`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Indexes for table `student`
+-- Indexy pre tabuľku `student`
 --
 ALTER TABLE `student`
   ADD PRIMARY KEY (`id`),
@@ -314,13 +319,13 @@ ALTER TABLE `student`
   ADD KEY `id_student` (`id_student`);
 
 --
--- Indexes for table `team`
+-- Indexy pre tabuľku `team`
 --
 ALTER TABLE `team`
   ADD PRIMARY KEY (`id_timu`);
 
 --
--- Indexes for table `users`
+-- Indexy pre tabuľku `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -328,49 +333,49 @@ ALTER TABLE `users`
   ADD KEY `id_ais` (`id_ais`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT pre exportované tabuľky
 --
 
 --
--- AUTO_INCREMENT for table `grade`
+-- AUTO_INCREMENT pre tabuľku `grade`
 --
 ALTER TABLE `grade`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
--- AUTO_INCREMENT for table `history_login`
+-- AUTO_INCREMENT pre tabuľku `history_login`
 --
 ALTER TABLE `history_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
--- AUTO_INCREMENT for table `mail`
+-- AUTO_INCREMENT pre tabuľku `mail`
 --
 ALTER TABLE `mail`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT pre tabuľku `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
--- AUTO_INCREMENT for table `sablon`
+-- AUTO_INCREMENT pre tabuľku `sablon`
 --
 ALTER TABLE `sablon`
   MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
--- AUTO_INCREMENT for table `student`
+-- AUTO_INCREMENT pre tabuľku `student`
 --
 ALTER TABLE `student`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
 --
--- AUTO_INCREMENT for table `team`
+-- AUTO_INCREMENT pre tabuľku `team`
 --
 ALTER TABLE `team`
-  MODIFY `id_timu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id_timu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT pre tabuľku `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
