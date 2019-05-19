@@ -197,13 +197,13 @@
 								while (($data = fgetcsv($handle, 1000, $delim)) !== FALSE) {
 									
 									//ak neexistuje tím s daným id tak ho vytvor
-									$sqlTim = "select id_timu from team where cislo_timu=$data[4] AND predmet= '" .$_POST['subject'] . "'"; 
+									$sqlTim = "select id_timu from team where cislo_timu=$data[4] AND predmet= '" .$_POST['subject'] . "' AND rok= '$year'"; 
 									$resultTim = mysqli_query($conn, $sqlTim);
 									if (mysqli_num_rows($resultTim) == 0) {
-										$sqlTim = "INSERT INTO team (cislo_timu, predmet) VALUES ($data[4], '" . $_POST['subject'] . "')";
+										$sqlTim = "INSERT INTO team (cislo_timu, predmet, rok) VALUES ($data[4], '" . $_POST['subject'] . "', '$year')";
 										mysqli_query($conn, $sqlTim);
 										
-										$sqlIdTimu = "select id_timu from team where cislo_timu=$data[4] AND predmet= '" .$_POST['subject'] . "'"; 
+										$sqlIdTimu = "select id_timu from team where cislo_timu=$data[4] AND predmet= '" .$_POST['subject'] . "' AND rok= '$year'"; 
 										$resultID = mysqli_query($conn, $sqlIdTimu);  
 										$pomID = mysqli_fetch_assoc($resultID);
 										$idTimu = $pomID['id_timu'];
@@ -284,8 +284,9 @@
 						
 						//Ak existujú záznamy pre nejaký predmet ukáž tlačidlo na ich zobrazenie.
 						$predmet = "";
+						$rok = "";
 						$existujePredmet = "false";
-						$sqlPredmety = "Select distinct predmet from team";
+						$sqlPredmety = "Select distinct predmet, rok from team";
 						$resultPredmety = mysqli_query($conn, $sqlPredmety);
 						if (mysqli_num_rows($resultPredmety) > 0) 
 						{		
@@ -295,11 +296,12 @@
 							while($rowP = mysqli_fetch_assoc($resultPredmety)) 
 							{
 								if ($rowP['predmet'] == $_GET['predmet']){
-									echo "<option value=". $rowP['predmet'] ." selected>". $rowP['predmet'] . "</option>";
+									echo "<option value=". $rowP['predmet'] ."-" . $rowP['rok'] . " selected>". $rowP['predmet'] . ", " . $rowP['rok'] . "</option>";
 								} else {
-									echo "<option value=". $rowP['predmet'] .">". $rowP['predmet'] . "</option>";
+									echo "<option value=". $rowP['predmet'] ."-" . $rowP['rok'] . ">". $rowP['predmet'] . ", " . $rowP['rok'] . "</option>";
 								}
 								$predmet = $rowP['predmet'];
+								$rok = $rowP['rok'];
 							}
 							echo "</select></div>";
 							echo "<input type='submit' value='Zobraz tímy' class='btn btn-primary'> ";
@@ -310,13 +312,15 @@
 						if (isset($_GET['predmet']))
 						{
 							// VYPISANIE DO TABULIEK	
-							$predmet = $_GET['predmet'];
+							$pomocna = explode('-', $_GET['predmet']);
+							$predmet = $pomocna[0];
+							$rok = $pomocna[1];
 						}
 						
 						if ($existujePredmet == "true")
 						{
-							echo "<h2><u>" . $predmet ."</u></h2>";
-							$sql2 = "SELECT * FROM team where predmet='" . $predmet ."'";
+							echo "<h2><u>" . $predmet .", " . $rok ."</u></h2>";
+							$sql2 = "SELECT * FROM team where predmet='" . $predmet ."' AND rok='" . $rok . "'";
 							$result2 = mysqli_query($conn, $sql2);  
 							if (mysqli_num_rows($result2) > 0) {
 								while($row2 = mysqli_fetch_assoc($result2)) {
@@ -374,7 +378,7 @@
 										//echo "<br>$nastaveneBody<br>";
 										if($nastaveneBody == "false") //ak nemá nastavené body tak ukáže formulár na nastavenie
 										{
-											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
+											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet. "-" . $rok . "' method='POST'>";
 											echo "<input type='number' id='body".$row2['id_timu']."' name='body'>";
 											echo "<input type='hidden' name='idTimu' value=" . $row2['id_timu'] . ">";
 											// ZMENA POMOCOU AJAX alebo XMLRPC!!!
@@ -384,12 +388,12 @@
 										
 										if($rozdeleneBody == "true" && $odsuhlaseneBody == "true" && $odsuhlaseneBodyAdminom == "none")
 										{
-											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
+											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet. "-" . $rok . "' method='POST'>";
 											echo "<input type='hidden' name='idTimu' value=" . $row2['id_timu'] . ">";									
 											echo "<input type='submit' name='suhlas' value='Súhlasím'>";
 											echo "</form>";
 											
-											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet."' method='POST'>";
+											echo "<form enctype='multipart/form-data' action='index.php?predmet=".$predmet. "-" . $rok . "' method='POST'>";
 											echo "<input type='hidden' name='idTimu' value=" . $row2['id_timu'] . ">";									
 											echo "<input type='submit' name='nesuhlas' value='Nesúhlasím'>";
 											echo "</form>";
@@ -424,7 +428,7 @@
 
 							// -------------------------------------- KU GRAFU S TEAMS -----------------------------------
 							$pocetTimov = 0; $uzavrete=0; $vyjadritsa=0; $studNevyj = 0;
-							$sql4 = "SELECT COUNT(*) as pocet FROM team where predmet='" . $predmet ."'";
+							$sql4 = "SELECT COUNT(*) as pocet FROM team where predmet='" . $predmet ."' AND rok='" . $rok . "'";
 							$result4 = mysqli_query($conn, $sql4);  
 							if (mysqli_num_rows($result4) > 0) {
 								$row = mysqli_fetch_assoc($result4);
@@ -432,7 +436,7 @@
 							}
 
 							// uzavrety tim
-							$sql4 = "SELECT Count(*) as pocet FROM team WHERE (odsuhlasene='Áno' OR odsuhlasene='Nie') AND predmet='" . $predmet ."'";
+							$sql4 = "SELECT Count(*) as pocet FROM team WHERE (odsuhlasene='Áno' OR odsuhlasene='Nie') AND predmet='" . $predmet ."' AND rok='" . $rok . "'";
 							$result4 = mysqli_query($conn, $sql4);  
 							if (mysqli_num_rows($result4) > 0) {
 								$row = mysqli_fetch_assoc($result4);
@@ -443,7 +447,7 @@
 							// SELECT id_timu FROM team WHERE odsuhlasene='Nevyjadril' AND predmet='Webtech'
 							// SELECT odsuhlasenie FROM student WHERE tim=22
 							$timyID = array();
-							$sql4 = "SELECT id_timu FROM team WHERE odsuhlasene='Nevyjadril' AND predmet='" . $predmet ."'";
+							$sql4 = "SELECT id_timu FROM team WHERE odsuhlasene='Nevyjadril' AND predmet='" . $predmet ."' AND rok='" . $rok . "'";
 							$result4 = mysqli_query($conn, $sql4);  
 							if (mysqli_num_rows($result4) > 0) {
 								
@@ -481,15 +485,15 @@
 
 
 							$dataPoints = array( 
-								array("label"=>"uzavrete", "y"=>($uzavrete/$pocetTimov)),
-								array("label"=>"treba vyjadrit", "y"=>($vyjadritsa/$pocetTimov)),
-								array("label"=>"nevyjadrili sa studenti", "y"=>($studNevyj/$pocetTimov))
+								array("label"=>"uzavrete", "y"=>($uzavrete/$pocetTimov)*100),
+								array("label"=>"treba vyjadrit", "y"=>($vyjadritsa/$pocetTimov)*100),
+								array("label"=>"nevyjadrili sa studenti", "y"=>($studNevyj/$pocetTimov)*100)
 							);
 
 							// --------------------------------------------- KU GRAFU STUDENTI -------------------------------------
 							$pocetStudentov = 0; $anoStud = 0; $nieStud = 0; $nevieStud = 0;
 							$timyID2 = array();
-							$sql5 = "SELECT id_timu FROM team WHERE predmet='".$predmet."'";
+							$sql5 = "SELECT id_timu FROM team WHERE predmet='".$predmet."' AND rok='" . $rok . "'";
 							$result5 = mysqli_query($conn, $sql5);  
 							if (mysqli_num_rows($result5) > 0) {
 									while($row = mysqli_fetch_assoc($result5)) {
@@ -524,9 +528,9 @@
 								</tbody></table></div>";
 
 							$dataPoints2 = array( 
-								array("label"=>"súhlasiaci študenti", "y"=>($anoStud/$pocetStudentov)),
-								array("label"=>"nesúhlasiaci študenti", "y"=>($nieStud/$pocetStudentov)),
-								array("label"=>"nevyjadrení študenti", "y"=>($nevieStud/$pocetStudentov))
+								array("label"=>"súhlasiaci študenti", "y"=>($anoStud/$pocetStudentov)*100),
+								array("label"=>"nesúhlasiaci študenti", "y"=>($nieStud/$pocetStudentov)*100),
+								array("label"=>"nevyjadrení študenti", "y"=>($nevieStud/$pocetStudentov)*100)
 							);
 
 							
@@ -600,13 +604,13 @@
 							
 							while ($team = $resultedteams->fetch_assoc()) {
 								
-								$sql = "SELECT predmet,body,odsuhlasene,cislo_timu FROM team WHERE id_timu =".$team['tim'];
+								$sql = "SELECT predmet,rok,body,odsuhlasene,cislo_timu FROM team WHERE id_timu =".$team['tim'];
 								$resultedteam = mysqli_query($conn, $sql);
 								
 								if (mysqli_num_rows($resultedteam) > 0) {
 									$rowteam = $resultedteam->fetch_assoc();
 									
-									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table class='table'><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']."</th></tr>";
+									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table class='table'><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']. ", " . $rowteam['rok'] ."</th></tr>";
 									echo "<tr><th>Tím: ".$rowteam['cislo_timu']."</th><th>Celkové body: ".$rowteam['body']."</th> <th colspan=\"2\">";
 									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Akceptované";
 									if($rowteam['odsuhlasene']=="Nie") echo "Rozdelenie Neakceptované";
