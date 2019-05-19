@@ -521,7 +521,7 @@
                             <a href="https://www.flaticon.com/" title="Flaticon" class="text-muted">www.flaticon.com</a>,
                             <a href="https://www.freepik.com/" class="text-muted">https://material.io</a>
                         </li>
-                        <li><a class="text-muted" href="#">Kontakt</a></li>
+                        <li><a class="text-muted" href="../../sk/podstranka.php">Podstránka</a></li>
                     </ul>
                 </div>
             </div>

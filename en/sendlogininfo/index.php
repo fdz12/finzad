@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Rozposielanie údajov | Hodnotenie predmetu</title>
+    <title>Sending login info | Evaluation of subject</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="../img/favicon.png">
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/jquery-ui.min.js"></script>
@@ -30,7 +31,7 @@
             <div class="container">
                 <a class="navbar-brand" href="">
                     <img src="../img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                    Hodnotenie predmetu
+                    Evaluation of subject
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -39,18 +40,31 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="../">Domov</a>
+                            <a class="nav-link" href="../">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../grade">Hodnotenie</a>
+                            <a class="nav-link" href="../grade">Grade</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="nav-link" href="../agreegrade">Súhlas hodnotenia</a>
+                            <a class="nav-link" href="../agreegrade">Agreement of grade</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" href="../sendlogininfo">Rozposielanie údajov</a>
+                            <a class="nav-link" href="../sendlogininfo">Sending login info</a>
                         </li>
-                    </ul>
+					</ul>
+					<div class="my-2 my-lg-0 mr-3">
+                        <div class="my-2 my-lg-0">
+                            <div class="dropdown">
+                                <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="flag-icon flag-icon-gb"></span> EN
+                                </a>
+                                
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="../../sk/sendlogininfo"><span class="flag-icon flag-icon-sk"></span> SK</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="my-2 my-lg-0">
                         <div class="my-2 my-lg-0">
                             <?php if(isset($_SESSION['username'])) { ?>
@@ -60,11 +74,11 @@
                                 </a>
                                 
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="../logout.php">Odhlásiť sa</a>
+                                    <a class="dropdown-item" href="../logout.php">Log out</a>
                                 </div>
                             </div>
                             <?php } else { ?>
-                            <a class="btn btn-light" href="../login.php" role="button">Prihlásiť sa</a>
+                            <a class="btn btn-light" href="../login.php" role="button">Log in</a>
                             <?php } ?>
                         </div>
                     </div>
@@ -76,7 +90,7 @@
     <main>
         <div class="container mt-4">
             <section>
-                <h4>Rozposielanie údajov</h4>
+                <h4>Sending login info</h4>
             </section>
 			<section>
 				<?php
@@ -204,9 +218,9 @@
 							  unlink(getcwd()."/".$userfile);
 
 						if (move_uploaded_file($_FILES["userfile"]["tmp_name"], $uploadfile)) {
-								  return ("Súbor bol úspešne pridaný\n");
+								  return ("File was succesfully uploaded\n");
 						} else{
-								  return "Chyba pri nahrávaní súboru!\n";
+								  return "Error while uploading a file!\n";
 						}
 					}
 					/////////////////////////////////////////////////////////////////////////////////
@@ -380,30 +394,66 @@
 					
 					// MAIN
 					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin" && !isset($_POST['submit3'])){
-						echo "<br><h5>Generovanie hesiel</h5>";
-						echo "	<form enctype='multipart/form-data' action='index.php' method='POST'>
-									
-									<label> Vyberte súbor </label> <input type='file' name='userfile' accept='.csv' required /> <br>
-									<label> Oddeľovač </label> 
-									<label><input type='radio' name='delim' value='coma' required> čiarka </label>
-									<label><input type='radio' name='delim' value='dotcoma' required> bodkočiarka </label> <br>
-									<input type='submit' name='submit1' value='Import' /> 
-								</form>";
+						echo "<br><h5>Generating passwords</h5>";
+						?>
+						<form enctype='multipart/form-data' action='index.php' method='POST'>
+							<div class="form-group">
+								<label for="userfile">Choose a file</label>
+								<input type="file" class="form-control" name="userfile" id="userfile" accept='.csv' required>
+							</div>
+							<label> Separator </label>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="delim" id="coma" value="coma" required>
+								<label class="form-check-label" for="coma">
+									comma
+								</label>
+							</div>
+							<div class="form-check mb-2">
+								<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="dotcoma" required>
+								<label class="form-check-label" for="dotcoma">
+									semicolon
+								</label>
+							</div>
+							<input type='submit' name='submit1' value='Import' class="btn btn-primary"> 
+						</form>
+						<?php
 						echo $returning1."<hr>";
-						echo "<h5>Rozposlanie údajov</h5>";
-						echo "	<form enctype='multipart/form-data' action='index.php' method='POST'>
-									<label> Vyberte súbor </label> <input type='file' name='userfile' accept='.csv' required /> <br>
-									<label> Oddeľovač </label> 
-									<label><input type='radio' name='delim' value='coma' required> čiarka </label>
-									<label><input type='radio' name='delim' value='dotcoma' required> bodkočiarka </label> 
-									<br>
-									<h6>Odosielatel</h6>
-									<label> Meno <input type='text' name='sendername' required></label> <br>
-									<label> Heslo <input type='password' name='senderpass' required></label> <br>
-									<label> Email <input type='text' name='senderemail' required></label> <br>";
-									
-						echo "<h6>Správa</h6>
-							<label>Šablóna: <select name=\"sablon\">";
+						echo "<h5>Sending login info</h5>";
+						?>
+							<form enctype='multipart/form-data' action='index.php' method='POST'>
+								<div class="form-group">
+									<label for="userfile">Choose a file</label>
+									<input type="file" class="form-control" name="userfile" id="userfile" accept='.csv' required>
+								</div>		
+								<label> Separator </label>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="delim" id="coma" value="coma" required>
+									<label class="form-check-label" for="coma">
+										comma
+									</label>
+								</div>
+								<div class="form-check mb-2">
+									<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="dotcoma" required>
+									<label class="form-check-label" for="dotcoma">
+										semicolon
+									</label>
+								</div>
+								<h6>Sender</h6>
+								<div class="form-group">
+									<label for="sendername">Name</label>
+									<input type="text" class="form-control" name="sendername" id="sendername" placeholder="Name" required>
+								</div>
+								<div class="form-group">
+									<label for="sendpass">Password</label>
+									<input type="password" class="form-control" name="sendpass" id="sendpass" placeholder="Password" required>
+								</div>
+								<div class="form-group">
+									<label for="senderemail">Email</label>
+									<input type="email" class="form-control" name="senderemail" id="senderemail" placeholder="Email" required>
+								</div>
+						<?php			
+						echo "<h6>Message</h6>
+							<div class='form-group'><label>Template:</label> <select class='form-control' name=\"sablon\">";
 							
 							$sql = "SELECT ID,name FROM sablon WHERE 1";
 							$result = mysqli_query($conn, $sql);
@@ -411,19 +461,26 @@
 								echo "<option value=\"".$row['ID']."\">".$row['name']."</option>";
 							}
   										
-						echo "</select></label><br>
-								<label>Názov správy: <input type='text' name='nazovspravy' required></label><br>
-								<label>Príloha: <input type='file' name='atachment'/> </label> <br>
-								<input type='submit' name='submit2' value='Poslať ako plain text'>
-								<input type='submit' name='submit3' value='Poslať ako html'>
-							</form>";
-						echo $returning2."<hr>";
+						echo "</select></div>";
+						?>
+							<div class="form-group">
+								<label for="nazovspravy">Name of message</label>
+								<input type="text" class="form-control" name="nazovspravy" id="nazovspravy" placeholder="Name of message" required>
+							</div>
+							<div class="form-group">
+								<label for="atachment">Attachment</label>
+								<input type="file" class="form-control" name="atachment" id="atachment">
+							</div>	
+							<input type='submit' name='submit2' value='Send as plain text' class="btn btn-primary">
+							<input type='submit' name='submit3' value='Send as html' class="btn btn-outline-primary">
+						</form>
+						<?php echo $returning2."<hr>";
 						
-						echo "<h5>Odoslané maily</h5>";
+						echo "<h5>Sent emails</h5>";
 						$sql3 = "Select datum, meno, predmet, id_sablon from mail";
 						$result3 = mysqli_query($conn, $sql3);
 						
-						echo "<table class=\"sortable\"><tr><th>Dátum</th><th>Meno</th><th>Predmet správy</th><th>Šablón</th></tr>";
+						echo "<table class=\"sortable table\"><tr><th>Dátum</th><th>Name</th><th>Subject of message</th><th>Template</th></tr>";
 						
 						while($rowstat = $result3->fetch_assoc()){
 							echo "<tr><td>".$rowstat['datum']."</td><td>".$rowstat['meno']."</td><td>".$rowstat['predmet']."</td><td>".$rowstat['id_sablon']."</td></tr>";
@@ -438,7 +495,7 @@
 						<script type=\"text/javascript\"> bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });</script><textarea name=\"texthtml\" cols=\"100\" rows=\"10\">";
 						echo $sablona;
 						echo "</textarea><br>";
-						echo "<input type='submit' name='submit4' value='Poslať'></form>";
+						echo "<input type='submit' name='submit4' value='Send'></form>";
 					}
 				?>
 
@@ -452,19 +509,19 @@
                 <div class="col-12 col-md">
                     <img class="mb-2" src="../img/favicon.png" alt="" width="24" height="24">
                     <small class="d-block mb-3 text-muted">© 2019</small>
-                    <span class="d-block mb-3 text-muted">Vytvorili: Denis Žuffa, Anna Skachová, Dominik Raslavský, Balázs Bence Bertalan, Zdenek Pichlík</span>
+                    <span class="d-block mb-3 text-muted">Made by Denis Žuffa, Anna Skachová, Dominik Raslavský, Balázs Bence Bertalan, Zdenek Pichlík</span>
                 </div>
 
             </div>
             <div class="row mt-4">
                 <div class="col-6 col-md">
-                    <h5>O stránke</h5>
+                    <h5>About website</h5>
                     <ul class="list-unstyled text-small">
-                        <li class="text-muted">Zdroje ikon:
+                        <li class="text-muted">Source of icons:
                             <a href="https://www.flaticon.com/" title="Flaticon" class="text-muted">www.flaticon.com</a>,
                             <a href="https://www.freepik.com/" class="text-muted">https://material.io</a>
                         </li>
-                        <li><a class="text-muted" href="#">Kontakt</a></li>
+                        <li><a class="text-muted" href="../../sk/podstranka.php">Subsite</a></li>
                     </ul>
                 </div>
             </div>

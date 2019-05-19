@@ -135,7 +135,7 @@
 							</label>
 						</div>
 						<div class="form-check">
-							<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="coma" required>
+							<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="dotcoma" required>
 							<label class="form-check-label" for="dotcoma">
 								semicolon
 							</label>
@@ -419,7 +419,7 @@
                             <a href="https://www.flaticon.com/" title="Flaticon" class="text-muted">www.flaticon.com</a>,
                             <a href="https://www.freepik.com/" class="text-muted">https://material.io</a>
                         </li>
-                        <li><a class="text-muted" href="../sk/podstranka.php">Subsite</a></li>
+                        <li><a class="text-muted" href="../../sk/podstranka.php">Subsite</a></li>
                     </ul>
                 </div>
             </div>
