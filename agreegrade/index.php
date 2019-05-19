@@ -602,7 +602,7 @@
 									echo "<form enctype='multipart/form-data' action='index.php' method='POST'><table class='table'><tr><th colspan=\"4\">Predmet: ".$rowteam['predmet']."</th></tr>";
 									echo "<tr><th>Tím: ".$rowteam['cislo_timu']."</th><th>Celkové body: ".$rowteam['body']."</th> <th colspan=\"2\">";
 									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Akceptované";
-									if($rowteam['odsuhlasene']=="Áno") echo "Rozdelenie Neakceptované";
+									if($rowteam['odsuhlasene']=="Nie") echo "Rozdelenie Neakceptované";
 									echo "</th></tr>";
 									echo "<tr><th>Email</th><th>Meno</th><th>Body</th><th>Súhlas</th></tr>";
 									
