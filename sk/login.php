@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="img/favicon.png">
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
@@ -34,7 +35,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="../">Domov</a>
+                            <a class="nav-link" href="../sk">Domov</a>
 						</li>
 						<?php
 						if(isset($_SESSION['username']))
@@ -54,6 +55,19 @@
 						<?php } ?>
 						<?php } ?>
                     </ul>
+                    <div class="my-2 my-lg-0 mr-3">
+                        <div class="my-2 my-lg-0">
+                            <div class="dropdown">
+                                <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="flag-icon flag-icon-sk"></span> SK
+                                </a>
+                                
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="../en/login.php"><span class="flag-icon flag-icon-gb"></span> EN</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="my-2 my-lg-0">
                         <div class="my-2 my-lg-0">
                             <a class="btn btn-light" href="login.php" role="button">Prihlásiť sa</a>

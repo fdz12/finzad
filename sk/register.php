@@ -47,7 +47,20 @@
                             <a class="nav-link" href="sendlogininfo">Rozposielanie údajov</a>
                         </li>
                     </ul>
-                    <div-- class="my-2 my-lg-0">
+                    <div class="my-2 my-lg-0 mr-3">
+                        <div class="my-2 my-lg-0">
+                            <div class="dropdown">
+                                <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="flag-icon flag-icon-sk"></span> SK
+                                </a>
+                                
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="../en"><span class="flag-icon flag-icon-gb"></span> EN</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-2 my-lg-0">
                         <a class="btn btn-light" href="login.php" role="button">Prihlásiť sa</a>
                     </div>
                 </div>
