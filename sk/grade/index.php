@@ -135,7 +135,7 @@
 							</label>
 						</div>
 						<div class="form-check">
-							<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="coma" required>
+							<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="dotcoma" required>
 							<label class="form-check-label" for="dotcoma">
 								bodkočiarka
 							</label>

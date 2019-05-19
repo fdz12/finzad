@@ -395,29 +395,65 @@
 					// MAIN
 					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin" && !isset($_POST['submit3'])){
 						echo "<br><h5>Generovanie hesiel</h5>";
-						echo "	<form enctype='multipart/form-data' action='index.php' method='POST'>
-									
-									<label> Vyberte súbor </label> <input type='file' name='userfile' accept='.csv' required /> <br>
-									<label> Oddeľovač </label> 
-									<label><input type='radio' name='delim' value='coma' required> čiarka </label>
-									<label><input type='radio' name='delim' value='dotcoma' required> bodkočiarka </label> <br>
-									<input type='submit' name='submit1' value='Import' /> 
-								</form>";
+						?>
+						<form enctype='multipart/form-data' action='index.php' method='POST'>
+							<div class="form-group">
+								<label for="userfile">Vyberte súbor</label>
+								<input type="file" class="form-control" name="userfile" id="userfile" accept='.csv' required>
+							</div>
+							<label> Oddeľovač </label>
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="delim" id="coma" value="coma" required>
+								<label class="form-check-label" for="coma">
+									čiarka
+								</label>
+							</div>
+							<div class="form-check mb-2">
+								<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="dotcoma" required>
+								<label class="form-check-label" for="dotcoma">
+									bodkočiarka
+								</label>
+							</div>
+							<input type='submit' name='submit1' value='Import' class="btn btn-primary"> 
+						</form>
+						<?php
 						echo $returning1."<hr>";
 						echo "<h5>Rozposlanie údajov</h5>";
-						echo "	<form enctype='multipart/form-data' action='index.php' method='POST'>
-									<label> Vyberte súbor </label> <input type='file' name='userfile' accept='.csv' required /> <br>
-									<label> Oddeľovač </label> 
-									<label><input type='radio' name='delim' value='coma' required> čiarka </label>
-									<label><input type='radio' name='delim' value='dotcoma' required> bodkočiarka </label> 
-									<br>
-									<h6>Odosielatel</h6>
-									<label> Meno <input type='text' name='sendername' required></label> <br>
-									<label> Heslo <input type='password' name='senderpass' required></label> <br>
-									<label> Email <input type='text' name='senderemail' required></label> <br>";
-									
+						?>
+							<form enctype='multipart/form-data' action='index.php' method='POST'>
+								<div class="form-group">
+									<label for="userfile">Vyberte súbor</label>
+									<input type="file" class="form-control" name="userfile" id="userfile" accept='.csv' required>
+								</div>		
+								<label> Oddeľovač </label>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="delim" id="coma" value="coma" required>
+									<label class="form-check-label" for="coma">
+										čiarka
+									</label>
+								</div>
+								<div class="form-check mb-2">
+									<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="dotcoma" required>
+									<label class="form-check-label" for="dotcoma">
+										bodkočiarka
+									</label>
+								</div>
+								<h6>Odosielatel</h6>
+								<div class="form-group">
+									<label for="sendername">Meno</label>
+									<input type="text" class="form-control" name="sendername" id="sendername" placeholder="Meno" required>
+								</div>
+								<div class="form-group">
+									<label for="sendpass">Heslo</label>
+									<input type="password" class="form-control" name="sendpass" id="sendpass" placeholder="Heslo" required>
+								</div>
+								<div class="form-group">
+									<label for="senderemail">Email</label>
+									<input type="email" class="form-control" name="senderemail" id="senderemail" placeholder="Email" required>
+								</div>
+						<?php			
 						echo "<h6>Správa</h6>
-							<label>Šablóna: <select name=\"sablon\">";
+							<div class='form-group'><label>Šablóna:</label> <select class='form-control' name=\"sablon\">";
 							
 							$sql = "SELECT ID,name FROM sablon WHERE 1";
 							$result = mysqli_query($conn, $sql);
@@ -425,19 +461,26 @@
 								echo "<option value=\"".$row['ID']."\">".$row['name']."</option>";
 							}
   										
-						echo "</select></label><br>
-								<label>Názov správy: <input type='text' name='nazovspravy' required></label><br>
-								<label>Príloha: <input type='file' name='atachment'/> </label> <br>
-								<input type='submit' name='submit2' value='Poslať ako plain text'>
-								<input type='submit' name='submit3' value='Poslať ako html'>
-							</form>";
-						echo $returning2."<hr>";
+						echo "</select></div>";
+						?>
+							<div class="form-group">
+								<label for="nazovspravy">Názov správy</label>
+								<input type="text" class="form-control" name="nazovspravy" id="nazovspravy" placeholder="Názov správy" required>
+							</div>
+							<div class="form-group">
+								<label for="atachment">Príloha</label>
+								<input type="file" class="form-control" name="atachment" id="atachment">
+							</div>	
+							<input type='submit' name='submit2' value='Poslať ako plain text' class="btn btn-primary">
+							<input type='submit' name='submit3' value='Poslať ako html' class="btn btn-outline-primary">
+						</form>
+						<?php echo $returning2."<hr>";
 						
 						echo "<h5>Odoslané maily</h5>";
 						$sql3 = "Select datum, meno, predmet, id_sablon from mail";
 						$result3 = mysqli_query($conn, $sql3);
 						
-						echo "<table class=\"sortable\"><tr><th>Dátum</th><th>Meno</th><th>Predmet správy</th><th>Šablón</th></tr>";
+						echo "<table class=\"sortable table\"><tr><th>Dátum</th><th>Meno</th><th>Predmet správy</th><th>Šablón</th></tr>";
 						
 						while($rowstat = $result3->fetch_assoc()){
 							echo "<tr><td>".$rowstat['datum']."</td><td>".$rowstat['meno']."</td><td>".$rowstat['predmet']."</td><td>".$rowstat['id_sablon']."</td></tr>";

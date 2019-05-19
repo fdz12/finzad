@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Prihlásenie | Hodnotenie predmetu</title>
+    <title>Prihlásenie | Evaluation of subject</title>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" />
@@ -25,7 +25,7 @@
             <div class="container">
                 <a class="navbar-brand" href="/finzad">
                     <img src="img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                    Hodnotenie predmetu
+                    Evaluation of subject
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -34,29 +34,29 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="../">Domov</a>
+                            <a class="nav-link" href="../">Home</a>
 						</li>
 						<?php
 						if(isset($_SESSION['username']))
                         {?>
                         <li class="nav-item">
-                            <a class="nav-link" href="../grade">Hodnotenie</a>
+                            <a class="nav-link" href="../grade">Grade</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="../agreegrade">Súhlas hodnotenia</a>
+                            <a class="nav-link" href="../agreegrade">Agreement of grade</a>
 						</li>
 						<?php
 						if(isset($_SESSION['username']) && $_SESSION['role'] == "admin")
                         {?>
                         <li class="nav-item">
-                            <a class="nav-link" href="sendlogininfo">Rozposielanie údajov</a>
+                            <a class="nav-link" href="sendlogininfo">Sending login info</a>
                         </li>
 						<?php } ?>
 						<?php } ?>
                     </ul>
                     <div class="my-2 my-lg-0">
                         <div class="my-2 my-lg-0">
-                            <a class="btn btn-light" href="login.php" role="button">Prihlásiť sa</a>
+                            <a class="btn btn-light" href="login.php" role="button">Log in</a>
                         </div>
                     </div>
                 </div>
@@ -84,16 +84,16 @@
                             $query = "INSERT into `history_login` (id_user, datetime_login)
                                         VALUES ('".$row["id"]."', NOW())";
                             mysqli_query($conn,$query);
-                            header("Location: /finzad");
+                            header("Location: /finzad/en/");
                         } else{
                             echo "<div class='form'>
-                            <h3>Login alebo heslo nie je správne.</h3>
-                            <br/>Kliknite sem pre <a href='login.php'>prihlásenie</a></div>";
+                            <h3>The login or password is incorrect.</h3>
+                            <br/>Click here for <a href='login.php'>login</a></div>";
                         }
                     } else{
                         echo "<div class='form'>
-                        <h3>Login alebo heslo nie je správne.</h3>
-                        <br/>Kliknite sem pre <a href='login.php'>prihlásenie</a></div>";
+                        <h3>The login or password is incorrect.</h3>
+                        <br/>Click here for <a href='login.php'>login</a></div>";
                     }
 			    }
 			    else if (isset($_POST['username']) && $_POST['submitldap']) {
@@ -148,15 +148,15 @@
                         $_SESSION['id'] = $id;
                         $_SESSION['role'] = $role;
                         $_SESSION['id_ais'] = $id_ais;
-					    header("Location: /finzad");
+					    header("Location: /finzad/en/");
 					} else {
 					    echo "<div class='form'>
-							<h3>Login alebo heslo nie je správne.</h3>
-							<br/>Kliknite sem pre <a href='login.php'>prihlásenie</a></div>";
+							<h3>The login or password is incorrect.</h3>
+							<br/>Click here for <a href='login.php'>login</a></div>";
 					}
 			    }
 			    else if ($_SESSION['username']) {
-					header("Location: /finzad");
+					header("Location: /finzad/en/");
 			    }
 			    else{
 			?>
@@ -169,7 +169,7 @@
                         <div class="card-body">
                             <form method="POST">
                                 <div class="form-group row">
-                                    <label for="username" class="col-md-4 col-form-label text-md-right">Prihlasovacie meno</label>
+                                    <label for="username" class="col-md-4 col-form-label text-md-right">Login</label>
 
                                     <div class="col-md-6">
                                         <input id="username" type="text" class="form-control" name="username" required autocomplete="username" autofocus>
@@ -177,7 +177,7 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label for="password" class="col-md-4 col-form-label text-md-right">Heslo</label>
+                                    <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
 
                                     <div class="col-md-6">
                                         <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password">
@@ -186,8 +186,8 @@
 
                                 <div class="form-group row mb-0">
                                     <div class="col-md-8 offset-md-4">
-                                        <input type="submit" name="submitregular" class="btn btn-primary" value="Prihlásiť sa klasicky">
-                                        <input type="submit" name="submitldap" class="btn btn-primary" value="Prihlásiť sa cez LDAP STUBA">
+                                        <input type="submit" name="submitregular" class="btn btn-primary" value="Log in local">
+                                        <input type="submit" name="submitldap" class="btn btn-primary" value="Log in via LDAP STUBA">
                                     </div>
                                 </div>
                             </form>
@@ -206,19 +206,19 @@
                 <div class="col-12 col-md">
                     <img class="mb-2" src="img/favicon.png" alt="" width="24" height="24">
                     <small class="d-block mb-3 text-muted">© 2019</small>
-                    <span class="d-block mb-3 text-muted">Vytvorili: Denis Žuffa, Anna Skachová, Dominik Raslavský, Balázs Bence Bertalan, Zdenek Pichlík</span>
+                    <span class="d-block mb-3 text-muted">Made by Denis Žuffa, Anna Skachová, Dominik Raslavský, Balázs Bence Bertalan, Zdenek Pichlík</span>
                 </div>
 
             </div>
             <div class="row mt-4">
                 <div class="col-6 col-md">
-                    <h5>O stránke</h5>
+                    <h5>About website</h5>
                     <ul class="list-unstyled text-small">
-                        <li class="text-muted">Zdroje ikon:
+                        <li class="text-muted">Source of icons:
                             <a href="https://www.flaticon.com/" title="Flaticon" class="text-muted">www.flaticon.com</a>,
                             <a href="https://www.freepik.com/" class="text-muted">https://material.io</a>
                         </li>
-                        <li><a class="text-muted" href="#">Kontakt</a></li>
+                        <li><a class="text-muted" href="../sk/podstranka.php">Subsite</a></li>
                     </ul>
                 </div>
             </div>

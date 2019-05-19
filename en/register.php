@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Registrácia | Hodnotenie predmetu</title>
+    <title>Registration | Evaluation of subject</title>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" />
@@ -26,7 +26,7 @@
             <div class="container">
                 <a class="navbar-brand" href="../">
                     <img src="img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                    Hodnotenie predmetu
+                    Evaluation of subject
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -35,20 +35,20 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="">Domov</a>
+                            <a class="nav-link" href="">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="grade">Hodnotenie</a>
+                            <a class="nav-link" href="grade">Grade</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="agreegrade">Súhlas hodnotenia</a>
+                            <a class="nav-link" href="agreegrade">Agreement of grade</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="sendlogininfo">Rozposielanie údajov</a>
+                            <a class="nav-link" href="sendlogininfo">Sending login info</a>
                         </li>
                     </ul>
                     <div-- class="my-2 my-lg-0">
-                        <a class="btn btn-light" href="login.php" role="button">Prihlásiť sa</a>
+                        <a class="btn btn-light" href="login.php" role="button">Log in</a>
                     </div>
                 </div>
             </div>
@@ -70,8 +70,8 @@
                     $row = $result->fetch_assoc();
                     if ($row['count'] != 0) {
                         echo "<div class='form'>
-                                    <h3>Zadaný login alebo email už existuje.</h3>
-                                    <br/>Kliknite tu pre <a href='login.php'>prihlásenie</a></div>";
+                                    <h3>Login or email already exists.</h3>
+                                    <br/>Click here for <a href='login.php'>login</a></div>";
                         form();
                     } else {
                         $query = "INSERT into `users` (login, password, email, created_at, role, type)
@@ -79,8 +79,8 @@
                         $result = mysqli_query($conn,$query);
                         if($result){
                             echo "<div class='form'>
-                                    <h3>Úspešne ste sa registrovali.</h3>
-                                    <br/>Kliknite tu pre <a href='login.php'>prihlásenie</a></div>";
+                                    <h3>You have successfully registered.</h3>
+                                    <br/>Click here for <a href='login.php'>login</a></div>";
                         }
                     } 
                 } else {
@@ -93,15 +93,15 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="card">
-                        <div class="card-header">Registrácia administrátora</div>
+                        <div class="card-header">Registration of admin</div>
 
                         <div class="card-body">
                             <form method="POST">
                                 <div class="form-group row">
-                                    <label for="username" class="col-md-4 col-form-label text-md-right">Prihlasovacie meno</label>
+                                    <label for="username" class="col-md-4 col-form-label text-md-right">Login</label>
 
                                     <div class="col-md-6">
-                                        <input id="username" type="text" class="form-control" name="username" placeholder="Prihlasovacie meno" required autocomplete="username" autofocus>
+                                        <input id="username" type="text" class="form-control" name="username" placeholder="Login" required autocomplete="username" autofocus>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -112,23 +112,23 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="password" class="col-md-4 col-form-label text-md-right">Heslo</label>
+                                    <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
 
                                     <div class="col-md-6">
-                                        <input id="password" type="password" class="form-control" name="password" placeholder="Heslo" required autocomplete="new-password">
+                                        <input id="password" type="password" class="form-control" name="password" placeholder="Password" required autocomplete="new-password">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="password" class="col-md-4 col-form-label text-md-right">Zadajte heslo znova</label>
+                                    <label for="password" class="col-md-4 col-form-label text-md-right">Password again</label>
 
                                     <div class="col-md-6">
-                                        <input id="password" type="password" class="form-control" name="password2" placeholder="Heslo znova " required autocomplete="new-password">
+                                        <input id="password" type="password" class="form-control" name="password2" placeholder="Password znova " required autocomplete="new-password">
                                     </div>
                                 </div>
 
                                 <div class="form-group row mb-0">
                                     <div class="col-md-8 offset-md-4">
-                                        <input type="submit" name="submit" class="btn btn-primary" value="Registrovať">
+                                        <input type="submit" name="submit" class="btn btn-primary" value="Register">
                                     </div>
                                 </div>
                             </form>
