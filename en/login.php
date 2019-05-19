@@ -24,7 +24,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #013f78;">
             <div class="container">
-                <a class="navbar-brand" href="/finzad">
+                <a class="navbar-brand" href="../en">
                     <img src="img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
                     Evaluation of subject
                 </a>

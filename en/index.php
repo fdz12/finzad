@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Domov | Evaluation of subject</title>
+    <title>Home | Evaluation of subject</title>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" />
@@ -25,7 +25,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #013f78;">
             <div class="container">
-                <a class="navbar-brand" href="/finzad">
+                <a class="navbar-brand" href="/finzad/en">
                     <img src="img/main-icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
                     Evaluation of subject
                 </a>
@@ -36,7 +36,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="/finzad">Home</a>
+                            <a class="nav-link" href="/finzad/en">Home</a>
                         </li>
                         <?php
 						if(isset($_SESSION['username']))
