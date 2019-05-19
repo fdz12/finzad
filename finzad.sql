@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 18, 2019 at 08:24 PM
+-- Generation Time: May 19, 2019 at 08:52 AM
 -- Server version: 5.7.25-0ubuntu0.18.04.2
 -- PHP Version: 7.2.15-0ubuntu0.18.04.1
 
@@ -91,7 +91,8 @@ INSERT INTO `history_login` (`id`, `id_user`, `datetime_login`) VALUES
 (18, 80, '2019-05-15 16:11:56'),
 (19, 10, '2019-05-15 17:20:26'),
 (20, 80, '2019-05-15 17:20:58'),
-(21, 10, '2019-05-18 19:36:55');
+(21, 10, '2019-05-18 19:36:55'),
+(22, 10, '2019-05-19 07:13:51');
 
 -- --------------------------------------------------------
 
@@ -124,6 +125,25 @@ CREATE TABLE `password_resets` (
   `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sablon`
+--
+
+CREATE TABLE `sablon` (
+  `ID` int(10) UNSIGNED NOT NULL,
+  `Sablona` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL,
+  `name` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `sablon`
+--
+
+INSERT INTO `sablon` (`ID`, `Sablona`, `name`) VALUES
+(1, 'Dobrý deň,\r\nna predmete Webové technológie 2 budete mať k dispozícii vlastný virtuálny linux server, ktorý budete\r\npoužívať počas semestra, a na ktorom budete vypracovávať zadania. Prihlasovacie údaje k Vašemu serveru\r\nsu uvedené nižšie.\r\nip adresa: {{verejnaIP}}\r\nprihlasovacie meno: {{login}}\r\nheslo: {{heslo}}\r\nVaše web stránky budú dostupné na: http:// {{verejnaIP}}:{{http}}\r\nS pozdravom,\r\n{{sender}}', 'Webte2 login');
 
 -- --------------------------------------------------------
 
@@ -249,6 +269,12 @@ ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
+-- Indexes for table `sablon`
+--
+ALTER TABLE `sablon`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- Indexes for table `student`
 --
 ALTER TABLE `student`
@@ -283,12 +309,17 @@ ALTER TABLE `grade`
 -- AUTO_INCREMENT for table `history_login`
 --
 ALTER TABLE `history_login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `sablon`
+--
+ALTER TABLE `sablon`
+  MODIFY `ID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `student`
 --

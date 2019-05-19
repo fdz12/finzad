@@ -76,6 +76,14 @@
             </section>
 			<section>
 				<?php
+				
+					include "../config.php";
+					$conn = new mysqli($servername, $username, $password, $dbname);
+					if ($conn->connect_error) {
+						die("Connection failed: " . $conn->connect_error);
+					}
+					mysqli_set_charset($conn,"utf8");
+				
 					// POST //////////////
 					if (isset($_POST['submit1'])){
 						//get delimiter
@@ -93,9 +101,27 @@
 					///////
 					if (isset($_POST['submit2'])){
 						$fileName2 = $_FILES['userfile']['name'];
-						$sender = $_POST['sender'];
+						
+						if($_POST['delim'] == "comma")
+							$delimiter2 = ",";
+						if($_POST['delim'] == "dotcoma")
+							$delimiter2 = ";";
+						
+						$sendername = $_POST['sendername'];
+						$senderpassword = $_POST['senderpass'];
+						$senderemail = $_POST['senderemail'];
+						$sablonID = $_POST['sablon'];
+						$title = $_POST['nazovspravy'];
+						//priloha
+						$fileName3 = $_FILES['atachment']['name'];
+						
 						$returning2 = fileupload($fileName2);
-						prepareMail($fileName2, $sender);
+						
+						//ak cvs uspesne uploadovany
+						if($returning2=="Súbor bol úspešne pridaný\n"){
+							$returning2 = fileupload($fileName3);
+							prepareMail($fileName2, $delimiter2, $sablonID, $sendername,$senderpassword,$senderemail,$title,$filename3);
+						}
 					}
 				
 					//file upload ///////////////////////////////////////////////////////////////////
@@ -153,55 +179,45 @@
 						return "<br><a href=".$filename.">Stiahnutie</a>";
 					}
 					
-					function prepareMail($fileName2, $sender){
-						$first = 0;
-						$ipPlace = 0;
-						$loginPlace = 0;
-						$hesloPlace = 0;
-						$httpPlace = 0;
-						$emailPlace = 0;
-						$ip = '';
-						$login = '';
-						$heslo = '';
-						$http = '';
-						$email = '';
-						if (($handle = fopen($fileName2, "r")) !== FALSE) {		
-							while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
-								if($first==0){
-									for($i; $i < sizeof($data); $i++){
-										if($data[$i] == "verejnaIP"){
-											$ipPlace = $i;
-										}
-										else if($data[$i] == "login"){
-											$loginPlace = $i;
-										}
-										else if($data[$i] == "heslo"){
-											$hesloPlace = $i;
-										}
-										else if($data[$i] == "http"){
-											$httpPlace = $i;
-										}
-										else if($data[$i] == "Email"){
-											$emailPlace = $i;
-										}
-									}
-									$first=1;
+				///////////////////////////////////////////////////////////////////////////////////////////
+					function prepareMail($fileName2, $delim, $sablonID,$sendername,$senderpassword,$senderemail,$title,$atachment){
+
+						if (($handle = fopen($fileName2, "r")) !== FALSE) {	
+							
+							include "../config.php";
+							$conn = new mysqli($servername, $username, $password, $dbname);
+							if ($conn->connect_error) {
+								die("Connection failed: " . $conn->connect_error);
+							}
+							mysqli_set_charset($conn,"utf8");
+							
+							$sql = "SELECT Sablona FROM sablon WHERE ID=".$sablonID;
+							$result = mysqli_query($conn, $sql);
+							if (mysqli_num_rows($result) > 0) {
+								$sablon = mysqli_fetch_assoc($result);
+							}
+							
+							if(($datatypes = fgetcsv($handle, 1000, $delim)) !== FALSE)
+							
+							while (($data = fgetcsv($handle, 1000, $delim)) !== FALSE) {
+								$text = $sablon['Sablona'];
+								
+								for($i=0; $i<count($data); $i++){
+									$text = str_replace("{{".$datatypes[$i]."}}",$data[$i],$text);
 								}
-								else{
-									$ip = $data[$ipPlace];
-									$login = $data[$loginPlace];
-									$heslo = $data[$hesloPlace];
-									$http = $data[$httpPlace];
-									$email = $data[$emailPlace];	
-									echo $ip . " " . $login . " " . $heslo . " " . $http . " " . $email . " " . $sender . "<br>";
-								}							
+								$text = str_replace("{{sender}}",$sendername,$text);
+								
+								var_dump($text);
 							}
 							fclose($handle);
+							unlink(getcwd()."/".$fileName2);
+						
+							//sendMail();
 						}
-						sendMail($ip, $login, $heslo, $http, $email, $sender);
 					}
 					
-					function sendMail($ip, $login, $heslo, $http, $email, $sender){
+				/////////////////////////////////////////////////////////////////////////////////////////
+					function sendMail(){
 						
 					}
 					/////////////////////////////////////////////////////////////////////////////////
@@ -221,9 +237,31 @@
 						echo "<h5>Rozposlanie údajov</h5>";
 						echo "	<form enctype='multipart/form-data' action='index.php' method='POST'>
 									<label> Vyberte súbor </label> <input type='file' name='userfile' accept='.csv' required /> <br>
-									<label> Odosielatel </label> <input type='text' name='sender' required /> <br>
-									<input type='submit' name='submit2' value='Send' /> 
-								</form>";
+									<label> Oddeľovač </label> 
+									<label><input type='radio' name='delim' value='coma' required> čiarka </label>
+									<label><input type='radio' name='delim' value='dotcoma' required> bodkočiarka </label> 
+									<br>
+									<h6>Odosielatel</h6>
+									<label> Meno <input type='text' name='sendername' required></label> <br>
+									<label> Heslo <input type='password' name='senderpass' required></label> <br>
+									<label> Email <input type='text' name='senderemail' required></label> <br>";
+									
+						echo "<h6>Správa</h6>
+							<label>Šablóna: <select name=\"sablon\">";
+							
+							$sql = "SELECT ID,name FROM sablon WHERE 1";
+							$result = mysqli_query($conn, $sql);
+							while ($row = $result->fetch_assoc()) {
+								echo "<option value=\"".$row['ID']."\">".$row['name']."</option>";
+							}
+  										
+						echo "</select></label><br>
+								<label>Názov správy: <input type='text' name='nazovspravy' required></label><br>
+								<label>Príloha: <input type='file' name='atachment'/> </label> <br>
+								<input type='submit' name='submit2' value='Poslať ako plain text'>
+								<input type='submit' name='submit3' value='Poslať ako html'>
+							</form>";
+						echo $returning2."<hr>";
 					}	
 				?>
 			</section>
