@@ -261,7 +261,7 @@
 						}
 
 						fclose($handle);
-						return "<br><a href=".$filename.">Stiahnutie</a>";
+						return "<br><a href=".$filename.">Download</a>";
 					}
 					
 				///////////////////////////////////////////////////////////////////////////////////////////
@@ -427,14 +427,14 @@
 								</div>		
 								<label> Separator </label>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="delim" id="coma" value="coma" required>
-									<label class="form-check-label" for="coma">
+									<label class="form-check-label">
+										<input class="form-check-input" type="radio" name="delim" id="coma" value="coma" required>
 										comma
 									</label>
 								</div>
 								<div class="form-check mb-2">
-									<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="dotcoma" required>
-									<label class="form-check-label" for="dotcoma">
+									<label class="form-check-label">
+										<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="dotcoma" required>
 										semicolon
 									</label>
 								</div>
@@ -445,7 +445,7 @@
 								</div>
 								<div class="form-group">
 									<label for="sendpass">Password</label>
-									<input type="password" class="form-control" name="sendpass" id="sendpass" placeholder="Password" required>
+									<input type="password" class="form-control" name="senderpass" id="sendpass" placeholder="Password" required>
 								</div>
 								<div class="form-group">
 									<label for="senderemail">Email</label>
@@ -492,10 +492,10 @@
 					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin" && isset($_POST['submit3'])){
 						echo "<form enctype='multipart/form-data' action='index.php' method='POST'>";
 						echo "<script type=\"text/javascript\" src=\"http://js.nicedit.com/nicEdit-latest.js\"></script> 
-						<script type=\"text/javascript\"> bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });</script><textarea name=\"texthtml\" cols=\"100\" rows=\"10\">";
+						<script type=\"text/javascript\"> bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });</script><textarea id=\"texteditor\" name=\"texthtml\" cols=\"100\" rows=\"10\">";
 						echo $sablona;
 						echo "</textarea><br>";
-						echo "<input type='submit' name='submit4' value='Send'></form>";
+						echo "<input type='submit' name='submit4' value='Send' class=\"btn btn-primary\"></form>";
 					}
 				?>
 

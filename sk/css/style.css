@@ -23,3 +23,7 @@ th, td {
 table {
     border-spacing: 5px;
 }
+
+#texteditor{
+	margin: auto;
+}

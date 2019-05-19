@@ -123,9 +123,9 @@
 					if (isset($_POST['submit2'])){
 						$fileName2 = $_FILES['userfile']['name'];
 						
-						if($_POST['delim'] == "comma")
+						if($_POST['delim2'] == "comma")
 							$delimiter2 = ",";
-						if($_POST['delim'] == "dotcoma")
+						if($_POST['delim2'] == "dotcoma")
 							$delimiter2 = ";";
 						
 						$sendername = $_POST['sendername'];
@@ -147,9 +147,9 @@
 						$fileName2 = $_FILES['userfile']['name'];
 						$_SESSION['filename'] = $fileName2;
 						
-						if($_POST['delim'] == "comma")
+						if($_POST['delim2'] == "comma")
 							$_SESSION['delimiter'] = ",";
-						if($_POST['delim'] == "dotcoma")
+						if($_POST['delim2'] == "dotcoma")
 							$_SESSION['delimiter'] = ";";
 						
 						$_SESSION['sendername'] = $_POST['sendername'];
@@ -309,6 +309,7 @@
 							fclose($handle);
 							unlink(getcwd()."/".$fileName2);
 						}
+
 					}
 				
 					function prepareHTML($sablonID){
@@ -334,7 +335,7 @@
 						
 						// Load Composer's autoloader
 						require '../vendor/autoload.php';
-
+												
 						// Instantiation and passing `true` enables exceptions
 						$mail = new PHPMailer(true);
 						$mail->Encoding = 'base64';
@@ -369,7 +370,6 @@
 						$mail = new PHPMailer(true);
 						$mail->Encoding = 'base64';
 						$mail->CharSet = 'utf-8';
-						
 						$mail->isSMTP(); // Set mailer to use SMTP
 						$mail->Host = 'mail.stuba.sk';
 						$mail->SMTPAuth   = true; // Enable SMTP authentication
@@ -427,14 +427,14 @@
 								</div>		
 								<label> Oddeľovač </label>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="delim" id="coma" value="coma" required>
-									<label class="form-check-label" for="coma">
+									<label class="form-check-label">
+										<input class="form-check-input" type="radio" name="delim2" id="coma" value="coma" required>
 										čiarka
 									</label>
 								</div>
 								<div class="form-check mb-2">
-									<input class="form-check-input" type="radio" name="delim" id="dotcoma" value="dotcoma" required>
-									<label class="form-check-label" for="dotcoma">
+									<label class="form-check-label">
+										<input class="form-check-input" type="radio" name="delim2" id="dotcoma" value="dotcoma" required>
 										bodkočiarka
 									</label>
 								</div>
@@ -445,7 +445,7 @@
 								</div>
 								<div class="form-group">
 									<label for="sendpass">Heslo</label>
-									<input type="password" class="form-control" name="sendpass" id="sendpass" placeholder="Heslo" required>
+									<input type="password" class="form-control" name="senderpass" id="sendpass" placeholder="Heslo" required>
 								</div>
 								<div class="form-group">
 									<label for="senderemail">Email</label>
@@ -492,10 +492,10 @@
 					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin" && isset($_POST['submit3'])){
 						echo "<form enctype='multipart/form-data' action='index.php' method='POST'>";
 						echo "<script type=\"text/javascript\" src=\"http://js.nicedit.com/nicEdit-latest.js\"></script> 
-						<script type=\"text/javascript\"> bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });</script><textarea name=\"texthtml\" cols=\"100\" rows=\"10\">";
+						<script type=\"text/javascript\"> bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });</script><textarea id=\"texteditor\" name=\"texthtml\" cols=\"100\" rows=\"10\">";
 						echo $sablona;
 						echo "</textarea><br>";
-						echo "<input type='submit' name='submit4' value='Poslať'></form>";
+						echo "<input type='submit' name='submit4' value='Poslať' class=\"btn btn-primary\"></form>";
 					}
 				?>
 
