@@ -13,6 +13,7 @@
     <script src="../js/popper.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/script.js"></script>
+
 </head>
 
 <?php
@@ -76,6 +77,9 @@
             </section>
 			<section>
 				<?php
+					// Import PHPMailer classes into the global namespace
+					use PHPMailer\PHPMailer\PHPMailer;
+					use PHPMailer\PHPMailer\Exception;
 				
 					include "../config.php";
 					$conn = new mysqli($servername, $username, $password, $dbname);
@@ -117,11 +121,68 @@
 						
 						$returning2 = fileupload($fileName2);
 						
-						//ak cvs uspesne uploadovany
-						if($returning2=="Súbor bol úspešne pridaný\n"){
-							$returning2 = fileupload($fileName3);
-							prepareMail($fileName2, $delimiter2, $sablonID, $sendername,$senderpassword,$senderemail,$title,$filename3);
+						if(isset($fileName3))
+							fileupload($fileName3);
+						prepareMail($fileName2, $delimiter2, $sablonID, $sendername,$senderpassword,$senderemail,$title,$filename3);
+					}
+				
+					if (isset($_POST['submit3'])){
+						$fileName2 = $_FILES['userfile']['name'];
+						$_SESSION['filename'] = $fileName2;
+						
+						if($_POST['delim'] == "comma")
+							$_SESSION['delimiter'] = ",";
+						if($_POST['delim'] == "dotcoma")
+							$_SESSION['delimiter'] = ";";
+						
+						$_SESSION['sendername'] = $_POST['sendername'];
+						$_SESSION['senderpassword'] = $_POST['senderpass'];
+						$_SESSION['senderemail'] = $_POST['senderemail'];
+						$sablonID = $_POST['sablon'];
+						$_SESSION['title'] = $_POST['nazovspravy'];
+						//priloha
+						$fileName3 = $_FILES['atachment']['name'];
+						
+						$returning2 = fileupload($fileName2);
+						
+						if(isset($fileName3))
+							fileupload($fileName3);
+						$sablona = prepareHTML($sablonID);
+					}
+				
+					if (isset($_POST['submit4'])){
+						$emailcol=0;
+						
+						$sendername = $_SESSION['sendername'];
+						$senderpassword = $_SESSION['senderpassword'];
+						$senderemail = $_SESSION['senderemail'];
+						$title = $_SESSION['title'];
+						
+						if (($handle = fopen($_SESSION['filename'], "r")) !== FALSE) {	
+							
+							if(($datatypes = fgetcsv($handle, 1000, $_SESSION['delimiter'])) !== FALSE)
+							
+							while (($data = fgetcsv($handle, 1000, $_SESSION['delimiter'])) !== FALSE) {
+								$text = $_POST['texthtml'];
+								
+								for($i=0; $i<count($data); $i++){
+									$text = str_replace("{{".$datatypes[$i]."}}",$data[$i],$text);
+									if($datatypes[$i]=="Email")
+										$emailcol=$i;
+								}
+								$text = str_replace("{{sender}}",$sendername,$text);
+								sendHTML($sendername,$senderpassword,$senderemail,$title,$atachment,$text,$data[$emailcol]);
+							}
+							fclose($handle);
 						}
+							unlink(getcwd()."/".$_SESSION['filename']);
+												
+						$_SESSION['filename'] = NULL;					
+						$_SESSION['delimiter'] = NULL;
+						$_SESSION['sendername'] = NULL;
+						$_SESSION['senderpassword'] = NULL;
+						$_SESSION['senderemail'] = NULL;
+						$_SESSION['title'] = NULL;
 					}
 				
 					//file upload ///////////////////////////////////////////////////////////////////
@@ -181,6 +242,7 @@
 					
 				///////////////////////////////////////////////////////////////////////////////////////////
 					function prepareMail($fileName2, $delim, $sablonID,$sendername,$senderpassword,$senderemail,$title,$atachment){
+						$emailcol=0;
 
 						if (($handle = fopen($fileName2, "r")) !== FALSE) {	
 							
@@ -204,26 +266,100 @@
 								
 								for($i=0; $i<count($data); $i++){
 									$text = str_replace("{{".$datatypes[$i]."}}",$data[$i],$text);
+									if($datatypes[$i]=="Email")
+										$emailcol=$i;
 								}
 								$text = str_replace("{{sender}}",$sendername,$text);
-								
-								var_dump($text);
+								sendMail($sendername,$senderpassword,$senderemail,$title,$atachment,$text,$data[$emailcol]);
 							}
 							fclose($handle);
 							unlink(getcwd()."/".$fileName2);
-						
-							//sendMail();
 						}
 					}
+				
+					function prepareHTML($sablonID){
+							
+							include "../config.php";
+							$conn = new mysqli($servername, $username, $password, $dbname);
+							if ($conn->connect_error) {
+								die("Connection failed: " . $conn->connect_error);
+							}
+							mysqli_set_charset($conn,"utf8");
+							
+							$sql = "SELECT Sablona FROM sablon WHERE ID=".$sablonID;
+							$result = mysqli_query($conn, $sql);
+							if (mysqli_num_rows($result) > 0) {
+								$sablon = mysqli_fetch_assoc($result);
+							}
+							
+						return $sablon['Sablona'];
+					}
 					
-				/////////////////////////////////////////////////////////////////////////////////////////
-					function sendMail(){
+					/////////////////////////////////////////////////////////////////////////////////////////
+					function sendMail($sendername,$senderpassword,$senderemail,$title,$atachment,$text,$sendto){
 						
+						// Load Composer's autoloader
+						require '../vendor/autoload.php';
+
+						// Instantiation and passing `true` enables exceptions
+						$mail = new PHPMailer(true);
+						$mail->Encoding = 'base64';
+						$mail->CharSet = 'utf-8';
+						
+						$mail->isSMTP(); // Set mailer to use SMTP
+						$mail->Host = 'mail.stuba.sk';
+						$mail->SMTPAuth   = true; // Enable SMTP authentication
+						$mail->Username   = $senderemail; // SMTP username
+						$mail->Password   = $senderpassword; // SMTP password
+						$mail->SMTPSecure = 'tls'; // Enable TLS encryption, `ssl` also accepted
+						$mail->Port       = 587; // TCP port to connect to
+						
+						$mail->setFrom($senderemail, $sendername);
+						$mail->addAddress($sendto); 
+						$mail->Subject = $title;
+						$mail->Body = $text;
+						if(isset($atachment))
+							$mail->addAttachment($atachment);
+						$mail->send();
+
+						if(isset($atachment))
+							unlink(getcwd()."/".$atachment);
+					}
+						
+					function sendHTML($sendername,$senderpassword,$senderemail,$title,$atachment,$text,$sendto){
+						
+						// Load Composer's autoloader
+						require '../vendor/autoload.php';
+
+						// Instantiation and passing `true` enables exceptions
+						$mail = new PHPMailer(true);
+						$mail->Encoding = 'base64';
+						$mail->CharSet = 'utf-8';
+						
+						$mail->isSMTP(); // Set mailer to use SMTP
+						$mail->Host = 'mail.stuba.sk';
+						$mail->SMTPAuth   = true; // Enable SMTP authentication
+						$mail->Username   = $senderemail; // SMTP username
+						$mail->Password   = $senderpassword; // SMTP password
+						$mail->SMTPSecure = 'tls'; // Enable TLS encryption, `ssl` also accepted
+						$mail->Port       = 587; // TCP port to connect to
+						
+						$mail->setFrom($senderemail, $sendername);
+						$mail->addAddress($sendto);
+						$mail->isHTML(true);   
+						$mail->Subject = $title;
+						$mail->Body = $text;
+						if(isset($atachment))
+							$mail->addAttachment($atachment);
+						$mail->send();
+
+						if(isset($atachment))
+							unlink(getcwd()."/".$atachment);
 					}
 					/////////////////////////////////////////////////////////////////////////////////
 					
 					// MAIN
-					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin"){
+					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin" && !isset($_POST['submit3'])){
 						echo "<br><h5>Generovanie hesiel</h5>";
 						echo "	<form enctype='multipart/form-data' action='index.php' method='POST'>
 									
@@ -263,7 +399,16 @@
 							</form>";
 						echo $returning2."<hr>";
 					}	
+					if(isset($_SESSION['username']) && $_SESSION['role'] == "admin" && isset($_POST['submit3'])){
+						echo "<form enctype='multipart/form-data' action='index.php' method='POST'>";
+						echo "<script type=\"text/javascript\" src=\"http://js.nicedit.com/nicEdit-latest.js\"></script> 
+						<script type=\"text/javascript\"> bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });</script><textarea name=\"texthtml\" cols=\"100\" rows=\"10\">";
+						echo $sablona;
+						echo "</textarea><br>";
+						echo "<input type='submit' name='submit4' value='Poslať'></form>";
+					}
 				?>
+
 			</section>
         </div>
     </main>
